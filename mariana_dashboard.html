@@ -19,6 +19,8 @@
     --teal: #0D7377; --teal-light: #E6F4F4;
   }
   body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+
+  /* HEADER */
   .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .header-left { display: flex; align-items: center; gap: 10px; }
   .logo { font-size: 14px; font-weight: 600; }
@@ -30,6 +32,17 @@
   .progress-fill { height: 4px; background: var(--green); border-radius: 2px; transition: width .3s; }
   .reset-btn { font-size: 11px; background: none; border: 1px solid var(--border); color: var(--text-2); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; }
   .reset-btn:hover { background: var(--surface2); }
+
+  /* TABS */
+  .tabs { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; gap: 0; }
+  .tab { font-size: 12px; font-weight: 500; padding: 12px 16px; cursor: pointer; color: var(--text-3); border-bottom: 2px solid transparent; transition: all .15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  /* TAB PANELS */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
   .main { max-width: 1100px; margin: 0 auto; padding: 24px 28px; }
   .week-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
   .day-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
@@ -94,14 +107,61 @@
   .status-warm { background: var(--amber-light); color: var(--amber); }
   .status-cold { background: var(--surface2); color: var(--text-3); }
   .status-active { background: var(--green-light); color: var(--green); }
+  .status-paused { background: var(--surface2); color: var(--text-3); }
+
+  /* SLACK CARD */
   .slack-msg { padding: 9px 16px; border-bottom: 1px solid var(--border); }
   .slack-msg:last-child { border-bottom: none; }
+  .slack-msg.flag { background: var(--amber-light); }
   .slack-sender { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
   .slack-time { font-size: 10px; color: var(--text-3); font-weight: 400; }
   .slack-text { font-size: 11.5px; color: var(--text-2); line-height: 1.5; }
   .slack-ch { font-size: 10px; color: var(--text-3); margin-top: 2px; }
   .sync-tag { font-size: 10px; background: var(--green-light); color: var(--green); padding: 1px 7px; border-radius: 10px; font-weight: 500; }
-  @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .week-strip { grid-template-columns: repeat(3, 1fr); } .main { padding: 16px; } }
+
+  /* QUICK LINKS */
+  .link-item { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .link-item:last-child { border-bottom: none; }
+  .link-label { font-size: 12px; font-weight: 500; color: var(--text); }
+  .link-sub { font-size: 11px; color: var(--text-3); }
+  .link-btn { font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--text-2); padding: 4px 10px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
+  .link-btn:hover { background: var(--border); }
+
+  /* CLIENT HISTORY TAB */
+  .client-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .client-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .client-card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .client-card-title { font-size: 13px; font-weight: 600; }
+  .client-meta { font-size: 11px; color: var(--text-3); }
+  .timeline-item { padding: 8px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-date { font-size: 10px; font-weight: 600; color: var(--text-3); min-width: 50px; padding-top: 1px; }
+  .timeline-text { font-size: 11.5px; color: var(--text-2); line-height: 1.5; }
+  .timeline-tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 10px; margin-right: 4px; }
+  .ttag-win { background: var(--green-light); color: var(--green); }
+  .ttag-issue { background: var(--red-light); color: var(--red); }
+  .ttag-milestone { background: var(--blue-light); color: var(--blue); }
+  .ttag-note { background: var(--surface2); color: var(--text-2); }
+  .client-kpi { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+  .kpi-item { flex: 1; padding: 8px 12px; text-align: center; border-right: 1px solid var(--border); }
+  .kpi-item:last-child { border-right: none; }
+  .kpi-val { font-size: 16px; font-weight: 600; color: var(--text); }
+  .kpi-label { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+
+  /* LEADS PIPELINE TAB */
+  .pipeline-section { margin-bottom: 20px; }
+  .pipeline-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); padding: 16px 0 8px; }
+  .pipeline-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .pipeline-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .pipeline-co { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+  .pipeline-notes { font-size: 11.5px; color: var(--text-2); margin-top: 5px; line-height: 1.5; }
+  .pipeline-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+  .pipeline-status { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .pipeline-date { font-size: 10px; color: var(--text-3); }
+  .lost-item { padding: 9px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; opacity: .6; }
+  .lost-item:last-child { border-bottom: none; }
+
+  @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .week-strip { grid-template-columns: repeat(3, 1fr); } .main { padding: 16px; } .client-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -116,7 +176,16 @@
     <button class="reset-btn" onclick="resetWeek()">↺ New week</button>
   </div>
 </header>
-<main class="main">
+
+<nav class="tabs">
+  <div class="tab active" onclick="switchTab('tasks')">📋 Tasks</div>
+  <div class="tab" onclick="switchTab('clients')">🟢 Client History</div>
+  <div class="tab" onclick="switchTab('leads')">🎯 Leads & Pipeline</div>
+</nav>
+
+<!-- ======== TAB: TASKS ======== -->
+<div id="tab-tasks" class="tab-panel active">
+<div class="main">
   <div class="week-strip" id="week-strip"></div>
   <div class="main-grid">
     <div class="left-col">
@@ -144,33 +213,34 @@
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-leads">Leads</span></div><div class="calm-title">LinkedIn outreach — Paul Pellizzari (Hard Rock Bet)</div><div class="calm-desc">VP Global Social. Flagged at SBC Toronto, no outreach yet. 3 sentences, reference iGaming experience.</div></div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-finance">Finance</span></div><div class="calm-title">Prep July invoice templates now</div><div class="calm-desc">July 1st invoices for all clients (except Milesopedia day 15). Getting templates ready now means zero scramble on July 1st.</div></div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-internal">Internal</span></div><div class="calm-title">Document one SOP this week</div><div class="calm-desc">Pick any process that lives only in your head — Euka workflow, payroll cycle, Blossom reporting. 20 min writing saves hours later.</div></div>
-          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-hr">HR</span></div><div class="calm-title">Async check-in with team</div><div class="calm-desc">10 min message to each person asking if they're blocked. Especialmente Laís e Harry. No meeting needed.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-hr">HR</span></div><div class="calm-title">Async check-in with team</div><div class="calm-desc">10 min message to each person asking if they're blocked. Especially Laís and Harry. No meeting needed.</div></div>
         </div>
       </div>
     </div>
     <div class="right-col">
+      <!-- SLACK CARD -->
       <div class="card">
         <div class="card-header">
           <div class="card-header-left">
             <span style="font-size:16px">💬</span>
-            <div><div class="card-title">Slack — últimas 48h</div><div class="card-sub">Sync: Jun 10, 11:42am ET · 8 msgs</div></div>
+            <div><div class="card-title">Slack — últimas 48h</div><div class="card-sub">Sync: Jun 10, 11:42am ET · 7 msgs</div></div>
           </div>
           <span class="sync-tag">Live</span>
         </div>
         <div>
-          <div class="slack-msg">
-            <div class="slack-sender">Mariana → Mike <span class="slack-time">Jun 10, 1:10pm</span></div>
-            <div class="slack-text">@Mike please let me know once you finished reviewing the commissions, so I can finalize the payrolls for this month</div>
+          <div class="slack-msg flag">
+            <div class="slack-sender" style="color:var(--amber)">⚠️ Payroll bloqueado <span class="slack-time">flag</span></div>
+            <div class="slack-text" style="color:var(--amber)">Mike ainda revisando comissões de junho — payroll bloqueado até confirmação dele.</div>
             <div class="slack-ch">Group DM · Mike, Alexanjelo</div>
           </div>
           <div class="slack-msg">
             <div class="slack-sender">Mariana → Harry <span class="slack-time">Jun 10, 12:47pm</span></div>
-            <div class="slack-text">hey harry, I noticed that for the month of may there are some invoices that are on the spreadsheet, but are not being displayed on the retool dashboard. tomorrow could you take a look?</div>
+            <div class="slack-text">hey harry, invoices de maio estão na planilha mas não aparecem no retool dashboard — checar amanhã</div>
             <div class="slack-ch">#intentt-finance</div>
           </div>
           <div class="slack-msg">
             <div class="slack-sender">Alexanjelo <span class="slack-time">Jun 10, 12:17pm</span></div>
-            <div class="slack-text">Just wanted to confirm all of our clients for both affiliate and agency. Our clients are: Milesopedia, Aposta Premia, Total Security, Blossom, Applyboard, BetterMe RX, Atom — Did I miss any? Also, do you happen to know which of these are affiliate, agency, or external creatives?</div>
+            <div class="slack-text">Confirmando lista de clientes: Milesopedia, Aposta Premia, Total Security, Blossom, Applyboard, BetterMe RX, Atom — qual é affiliate vs agency vs external creatives?</div>
             <div class="slack-ch">DM · Alexanjelo (compliance)</div>
           </div>
           <div class="slack-msg">
@@ -180,7 +250,12 @@
           </div>
           <div class="slack-msg">
             <div class="slack-sender">Mariana → Mike <span class="slack-time">Jun 10, 11:55am</span></div>
-            <div class="slack-text">do you think it's alright if I share this spreadsheet with Zina, instead of keep updating that other one that she uses? That one is a bit confusing and doesn't show the full picture</div>
+            <div class="slack-text">ok pra compartilhar a planilha com Zina em vez daquela que ela usa? essa não mostra o full picture</div>
+            <div class="slack-ch">DM · Mike</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Mike <span class="slack-time">Jun 10, 12:19pm</span></div>
+            <div class="slack-text">yeah of course it is / thank you!</div>
             <div class="slack-ch">DM · Mike</div>
           </div>
           <div class="slack-msg">
@@ -188,18 +263,10 @@
             <div class="slack-text">a outra nao vi ainda</div>
             <div class="slack-ch">DM · Laís</div>
           </div>
-          <div class="slack-msg">
-            <div class="slack-sender">Mike <span class="slack-time">Jun 10, 12:19pm</span></div>
-            <div class="slack-text">yeah of course it is / thank you!</div>
-            <div class="slack-ch">DM · Mike</div>
-          </div>
-          <div class="slack-msg" style="background:var(--amber-light);">
-            <div class="slack-sender" style="color:var(--amber)">⚠️ Ação pendente <span class="slack-time">payroll</span></div>
-            <div class="slack-text" style="color:var(--amber)">Mike ainda revisando comissões — payroll de junho bloqueado até ele confirmar.</div>
-            <div class="slack-ch">Flag automática</div>
-          </div>
         </div>
       </div>
+
+      <!-- UPCOMING DEADLINES -->
       <div class="card">
         <div class="card-header"><div class="card-header-left"><span style="font-size:16px">📅</span><div><div class="card-title">Upcoming deadlines</div></div></div></div>
         <div>
@@ -210,17 +277,23 @@
           <div class="upcoming-item"><div class="upcoming-date">Ongoing</div><div class="upcoming-dot" style="background:var(--red)"></div><div class="upcoming-text">Audrey approvals — follow up if >48h</div></div>
         </div>
       </div>
+
+      <!-- QUICK LINKS -->
       <div class="card">
-        <div class="card-header"><div class="card-header-left"><span style="font-size:16px">🎯</span><div><div class="card-title">Active leads</div></div></div></div>
+        <div class="card-header"><div class="card-header-left"><span style="font-size:16px">🔗</span><div><div class="card-title">Quick links</div></div></div></div>
         <div>
-          <div class="lead-item"><div><div class="lead-name">Dylan Liebenberg</div><div class="lead-co">NeoBet</div></div><span class="lead-status status-hot">2nd call pending</span></div>
-          <div class="lead-item"><div><div class="lead-name">Rhino Entertainment</div><div class="lead-co">Bowen / Geraldine / Mark</div></div><span class="lead-status status-hot">Proposal in progress</span></div>
-          <div class="lead-item"><div><div class="lead-name">Shubham Arora</div><div class="lead-co">Raffle World</div></div><span class="lead-status status-warm">Follow-up pending</span></div>
-          <div class="lead-item"><div><div class="lead-name">ATOM (Alex Lovallo)</div><div class="lead-co">ATOM</div></div><span class="lead-status status-warm">Compliance docs em andamento</span></div>
-          <div class="lead-item"><div><div class="lead-name">Paul Pellizzari</div><div class="lead-co">Hard Rock Bet</div></div><span class="lead-status status-cold">No outreach yet</span></div>
-          <div class="lead-item"><div><div class="lead-name">BEC (guowei@bio-explorer)</div><div class="lead-co">BEC x Intentt</div></div><span class="lead-status status-hot">Call agendada Jun 11</span></div>
+          <div class="link-item">
+            <div><div class="link-label">Intentt Social Media Calendar</div><div class="link-sub">Agency-wide content calendar</div></div>
+            <a href="https://social-media-intentt.netlify.app/" target="_blank" class="link-btn">Open →</a>
+          </div>
+          <div class="link-item">
+            <div><div class="link-label">Milesopedia Approval Hub</div><div class="link-sub">Creator asset approvals — Audrey</div></div>
+            <a href="https://milesopedia-intentt.netlify.app/" target="_blank" class="link-btn">Open →</a>
+          </div>
         </div>
       </div>
+
+      <!-- CLIENT HEALTH -->
       <div class="card">
         <div class="card-header"><div class="card-header-left"><span style="font-size:16px">🟢</span><div><div class="card-title">Client health</div></div></div></div>
         <div>
@@ -228,25 +301,231 @@
           <div class="lead-item"><div><div class="lead-name">BetterMeRx</div></div><span class="lead-status status-active">Active</span></div>
           <div class="lead-item"><div><div class="lead-name">NeoBet Ontario</div></div><span class="lead-status status-active">Active</span></div>
           <div class="lead-item"><div><div class="lead-name">Hanhoo TikTok Shop</div></div><span class="lead-status status-active">Active</span></div>
-          <div class="lead-item"><div><div class="lead-name">Total Security</div></div><span class="lead-status status-warm">Email forwarded compliance</span></div>
-          <div class="lead-item"><div><div class="lead-name">Blossom</div></div><span class="lead-status status-active">Weekly Recap Jun 12</span></div>
+          <div class="lead-item"><div><div class="lead-name">Total Security</div></div><span class="lead-status status-warm">Email fwd compliance</span></div>
+          <div class="lead-item"><div><div class="lead-name">Blossom</div></div><span class="lead-status status-active">Active · Recap Jun 12</span></div>
           <div class="lead-item"><div><div class="lead-name">Aposta Premia / ApplyBoard</div></div><span class="lead-status status-active">Active</span></div>
         </div>
       </div>
     </div>
   </div>
-</main>
+</div>
+</div>
+
+<!-- ======== TAB: CLIENT HISTORY ======== -->
+<div id="tab-clients" class="tab-panel">
+<div class="main">
+  <div class="client-grid">
+
+    <!-- MILESOPEDIA -->
+    <div class="client-card">
+      <div class="client-card-header">
+        <div><div class="client-card-title">Milesopedia</div><div class="client-meta">Performance UGC · Meta + TikTok · Since Nov 2025</div></div>
+        <span class="lead-status status-warm">Audrey lag</span>
+      </div>
+      <div class="client-kpi">
+        <div class="kpi-item"><div class="kpi-val">3</div><div class="kpi-label">Active creators</div></div>
+        <div class="kpi-item"><div class="kpi-val">~$X</div><div class="kpi-label">Cost/subscriber</div></div>
+        <div class="kpi-item"><div class="kpi-val">IG EN</div><div class="kpi-label">Mariana manages</div></div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">Jun 10</div><div class="timeline-text"><span class="timeline-tag ttag-note">Note</span>Audrey lag on approvals — follow up if >48h. Giovani underperforming, rotation pending.</div></div>
+      <div class="timeline-item"><div class="timeline-date">May 26</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Report</span>Biweekly report delivered. April (TikTok) best performer — push to Meta proposed.</div></div>
+      <div class="timeline-item"><div class="timeline-date">May 12</div><div class="timeline-text"><span class="timeline-tag ttag-win">Win</span>April won TikTok creator slot. Tracey won Meta creator slot.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Apr 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Milestone</span>Lower-funnel pivot — cost per subscriber becomes main KPI.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Jan 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Milestone</span>Notion pipeline (6 stages) + Content Hub live on Netlify + Google Sheets.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Nov 2025</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Start</span>Account onboarded. Weekly DOCX reporting by platform with ▲▼ tables.</div></div>
+      <div style="padding:10px 16px;border-top:1px solid var(--border)">
+        <a href="https://milesopedia-intentt.netlify.app/" target="_blank" class="link-btn">Approval Hub →</a>
+      </div>
+    </div>
+
+    <!-- BLOSSOM -->
+    <div class="client-card">
+      <div class="client-card-header">
+        <div><div class="client-card-title">Blossom</div><div class="client-meta">Performance · Google + Meta + TikTok + iOS/Android</div></div>
+        <span class="lead-status status-active">Active</span>
+      </div>
+      <div class="client-kpi">
+        <div class="kpi-item"><div class="kpi-val">4</div><div class="kpi-label">Platforms</div></div>
+        <div class="kpi-item"><div class="kpi-val">Fri</div><div class="kpi-label">Weekly report</div></div>
+        <div class="kpi-item"><div class="kpi-val">Brandon</div><div class="kpi-label">Main contact</div></div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">Jun 12</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Upcoming</span>Weekly Recap call 12pm–1pm. Report due before.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Jun 10</div><div class="timeline-text"><span class="timeline-tag ttag-note">Note</span>Chart.js reporting stack. Weekly DOCX by platform.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Apr 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Pivot</span>Lower-funnel focus mid-April. iOS/Android split added to reports.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Nov 2025</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Start</span>Account onboarded. Weekly Recap recurring every Thursday.</div></div>
+    </div>
+
+    <!-- NEOBET -->
+    <div class="client-card">
+      <div class="client-card-header">
+        <div><div class="client-card-title">NeoBet Ontario</div><div class="client-meta">iGaming · AGCO/iGO compliance · Ontario</div></div>
+        <span class="lead-status status-active">Active</span>
+      </div>
+      <div class="client-kpi">
+        <div class="kpi-item"><div class="kpi-val">AGCO</div><div class="kpi-label">Regulator</div></div>
+        <div class="kpi-item"><div class="kpi-val">Dylan</div><div class="kpi-label">Main contact</div></div>
+        <div class="kpi-item"><div class="kpi-val">2nd call</div><div class="kpi-label">Pending (leads)</div></div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">Jun 10</div><div class="timeline-text"><span class="timeline-tag ttag-note">Note</span>Compliance review ongoing with Alexanjelo. AGCO iGO standards apply to all creative.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Apr 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Milestone</span>Full compliance framework established for Ontario iGaming.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Jan 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Start</span>Account onboarded. Dylan Liebenberg primary contact.</div></div>
+    </div>
+
+    <!-- BETTERMERX -->
+    <div class="client-card">
+      <div class="client-card-header">
+        <div><div class="client-card-title">BetterMeRx</div><div class="client-meta">UGC Pixar-style · Higgsfield AI → ElevenLabs → CapCut</div></div>
+        <span class="lead-status status-active">Active</span>
+      </div>
+      <div class="client-kpi">
+        <div class="kpi-item"><div class="kpi-val">Pixar</div><div class="kpi-label">3D animated UGC</div></div>
+        <div class="kpi-item"><div class="kpi-val">0.8–0.9</div><div class="kpi-label">Subject Strength</div></div>
+        <div class="kpi-item"><div class="kpi-val">Active</div><div class="kpi-label">Production</div></div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">Jun 10</div><div class="timeline-text"><span class="timeline-tag ttag-note">Production</span>"The Chaos" concept active: 3-scene structure (chaotic thought-bubble → transition/relief → calm resolution).</div></div>
+      <div class="timeline-item"><div class="timeline-date">Jun 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Pipeline</span>Higgsfield AI → ElevenLabs → CapCut/Premiere. Character reference: character_reference_BetterMeRx.jpg.</div></div>
+      <div class="timeline-item"><div class="timeline-date">May 2026</div><div class="timeline-text"><span class="timeline-tag ttag-milestone">Start</span>Pixar UGC pipeline established. Recurring female character with Subject Reference system.</div></div>
+    </div>
+
+    <!-- HANHOO -->
+    <div class="client-card">
+      <div class="client-card-header">
+        <div><div class="client-card-title">Hanhoo TikTok Shop</div><div class="client-meta">Store ID Euka: 8a785dbc-c5f9-435a-bf5e-5c148d8562bb · Tracy</div></div>
+        <span class="lead-status status-active">Active</span>
+      </div>
+      <div class="client-kpi">
+        <div class="kpi-item"><div class="kpi-val">TikTok</div><div class="kpi-label">Platform</div></div>
+        <div class="kpi-item"><div class="kpi-val">Tracy</div><div class="kpi-label">Contact</div></div>
+        <div class="kpi-item"><div class="kpi-val">Euka</div><div class="kpi-label">Stack</div></div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">Jun 10</div><div class="timeline-text"><span class="timeline-tag ttag-note">Note</span>No compliance/brand guidelines on file. Alexanjelo flagged this week.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Thu weekly</div><div class="timeline-text"><span class="timeline-tag ttag-note">Recurring</span>Performance check with Tracy every Thursday.</div></div>
+    </div>
+
+    <!-- TOTAL SECURITY -->
+    <div class="client-card">
+      <div class="client-card-header">
+        <div><div class="client-card-title">Total Security</div><div class="client-meta">Retool dashboard + Snowflake</div></div>
+        <span class="lead-status status-warm">Compliance email sent</span>
+      </div>
+      <div class="client-kpi">
+        <div class="kpi-item"><div class="kpi-val">Retool</div><div class="kpi-label">Dashboard</div></div>
+        <div class="kpi-item"><div class="kpi-val">Snowflake</div><div class="kpi-label">Data source</div></div>
+        <div class="kpi-item"><div class="kpi-val">Harry</div><div class="kpi-label">Technical</div></div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">Jun 10</div><div class="timeline-text"><span class="timeline-tag ttag-issue">Issue</span>Invoices de maio ausentes no Retool dashboard — Harry checando amanhã. Email forwarded to Alexanjelo.</div></div>
+      <div class="timeline-item"><div class="timeline-date">Thu weekly</div><div class="timeline-text"><span class="timeline-tag ttag-note">Recurring</span>Retool dashboard anomaly check every Thursday.</div></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ======== TAB: LEADS & PIPELINE ======== -->
+<div id="tab-leads" class="tab-panel">
+<div class="main">
+  <div class="pipeline-section">
+    <div class="pipeline-title">🔴 Hot — Action required this week</div>
+    <div class="pipeline-card">
+      <div>
+        <div class="pipeline-name">Dylan Liebenberg</div>
+        <div class="pipeline-co">NeoBet</div>
+        <div class="pipeline-notes">2nd call pending. Already a client — this is an expansion/upsell opportunity.</div>
+      </div>
+      <div class="pipeline-right">
+        <span class="pipeline-status status-hot">2nd call pending</span>
+        <span class="pipeline-date">Active client</span>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div>
+        <div class="pipeline-name">Rhino Entertainment</div>
+        <div class="pipeline-co">Bowen / Geraldine / Mark</div>
+        <div class="pipeline-notes">Call done. Proposal in progress. Use template in Growth & Proposals project. Follow up if no response by end of week.</div>
+      </div>
+      <div class="pipeline-right">
+        <span class="pipeline-status status-hot">Proposal in progress</span>
+        <span class="pipeline-date">Follow up Jun 13</span>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div>
+        <div class="pipeline-name">BEC x Intentt</div>
+        <div class="pipeline-co">guowei@bio-explorer.com · ruijing09@gmail.com</div>
+        <div class="pipeline-notes">Call scheduled Jun 11 at 11:00am. Mike confirmed. New prospect — first meeting.</div>
+      </div>
+      <div class="pipeline-right">
+        <span class="pipeline-status status-hot">Call Jun 11 11am</span>
+        <span class="pipeline-date">Tomorrow</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline-section">
+    <div class="pipeline-title">🟡 Warm — In progress</div>
+    <div class="pipeline-card">
+      <div>
+        <div class="pipeline-name">Shubham Arora</div>
+        <div class="pipeline-co">Raffle World</div>
+        <div class="pipeline-notes">Follow-up pending. Initial contact made, no response yet.</div>
+      </div>
+      <div class="pipeline-right">
+        <span class="pipeline-status status-warm">Follow-up pending</span>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div>
+        <div class="pipeline-name">ATOM (Alex Lovallo)</div>
+        <div class="pipeline-co">ATOM</div>
+        <div class="pipeline-notes">Scripts in review. Alexanjelo building compliance doc for ATOM this week — resource shared from Mariana.</div>
+      </div>
+      <div class="pipeline-right">
+        <span class="pipeline-status status-warm">Scripts + compliance</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline-section">
+    <div class="pipeline-title">⚪ Cold — No action yet</div>
+    <div class="pipeline-card">
+      <div>
+        <div class="pipeline-name">Paul Pellizzari</div>
+        <div class="pipeline-co">Hard Rock Bet · VP Global Social</div>
+        <div class="pipeline-notes">Flagged at SBC Toronto. No outreach yet. Send 3-sentence LinkedIn message referencing iGaming experience.</div>
+      </div>
+      <div class="pipeline-right">
+        <span class="pipeline-status status-cold">No outreach yet</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline-section">
+    <div class="pipeline-title">❌ Lost / Paused</div>
+    <div class="card">
+      <div class="lost-item"><div><div class="lead-name">ApplyBoard</div><div class="lead-co">Campaigns paused</div></div><span class="lead-status status-paused">Paused</span></div>
+      <div class="lost-item"><div><div class="lead-name">Geppetto / El Gordo</div><div class="lead-co">Restaurant, Montreal</div></div><span class="lead-status status-paused">Low activity</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
 <script>
+// TAB SWITCHING
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const tabs = ['tasks','clients','leads'];
+    t.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
 const STORAGE_KEY='mariana_dash_v1',WEEK_KEY='mariana_week_v1';
 function getWeekId(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));return m.toISOString().slice(0,10);}
 function getWeekLabel(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));const s=new Date(m);s.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('en-CA',{month:'short',day:'numeric'});return`Week of ${f(m)} – ${f(s)}`;}
 function getTodayIdx(){const d=new Date().getDay();return d===0?4:d-1;}
-// REAL CALENDAR DATA — Jun 9–13 2026 (America/Toronto)
-// Mon Jun 9: TL Weekly 9:00–9:45, General Weekly 10:00–10:30, Creative Weekly 11:30–12:00
-// Tue Jun 10: (today — no scheduled calls from calendar)
-// Wed Jun 11: Lucas Appointment 8:00–10:00, BEC x Intentt 11:00–11:30
-// Thu Jun 12: Weekly Recap (Blossom) 12:00–13:00
-// Fri Jun 13: —
+
+// REAL CALENDAR DATA — Jun 9–13 2026 (Google Calendar, America/Toronto)
 const DAYS=[
   {name:'Monday',short:'MON',calls:[
     {time:'9:00am',text:'TL Weekly Meeting',color:'#6B3FA0'},
@@ -263,33 +542,32 @@ const DAYS=[
     {id:'tue1',label:'Team Leads — review blockers, decisions needed',tags:['internal']},
     {id:'tue2',label:'General Weekly — present week priorities',tags:['internal']},
     {id:'tue3',label:'Check active leads — any follow-up due this week?',tags:['leads']},
-    {id:'tue4',label:'Payroll: aguardar Mike confirmar revisão de comissões',tags:['finance']},
-    {id:'tue5',label:'Harry: invoices de Maio ausentes no Retool — checar amanhã',tags:['totalsec']},
+    {id:'tue4',label:'⚠️ Aguardar Mike confirmar revisão de comissões (payroll)',tags:['finance']},
+    {id:'tue5',label:'Responder Alexanjelo: clientes affiliate vs agency vs external',tags:['internal']},
   ]},
   {name:'Wednesday',short:'WED',calls:[
     {time:'8:00am',text:'Lucas Appointment',color:'#9B9891'},
     {time:'11:00am',text:'BEC x Intentt',color:'#C0392B'},
   ],tasks:[
-    {id:'wed1',label:'Mid-week client check — any campaign issues from Maia?',tags:['internal']},
-    {id:'wed2',label:'Check Audrey approvals — follow up if >48h',tags:['miles']},
-    {id:'wed3',label:'BetterMeRx — production status check',tags:['bettermerx']},
-    {id:'wed4',label:'NeoBet — anything pending compliance with Alexanjelo?',tags:['neobet']},
-    {id:'wed5',label:'Responder Alexanjelo: lista de clientes affiliate vs agency',tags:['internal']},
+    {id:'wed1',label:'BEC x Intentt call 11am — primeiro contato, Mike presente',tags:['leads']},
+    {id:'wed2',label:'Mid-week client check — campaign issues from Maia?',tags:['internal']},
+    {id:'wed3',label:'Check Audrey approvals — follow up if >48h',tags:['miles']},
+    {id:'wed4',label:'BetterMeRx — production status check',tags:['bettermerx']},
+    {id:'wed5',label:'NeoBet — anything pending compliance with Alexanjelo?',tags:['neobet']},
   ]},
   {name:'Thursday',short:'THU',calls:[
     {time:'12:00pm',text:'Weekly Recap (Blossom)',color:'#6B3FA0'},
   ],tasks:[
-    {id:'thu1',label:'Review Laís QA on creator assets',tags:['miles']},
-    {id:'thu2',label:'Total Security Retool dashboard — invoices maio ausentes (Harry)',tags:['totalsec']},
-    {id:'thu3',label:'Hanhoo — check performance with Tracy',tags:['hanhoo']},
-    {id:'thu4',label:'Prep Blossom report data for Weekly Recap',tags:['blossom']},
+    {id:'thu1',label:'Blossom Weekly Recap 12pm — report pronto antes',tags:['blossom']},
+    {id:'thu2',label:'Review Laís QA on creator assets',tags:['miles']},
+    {id:'thu3',label:'Total Security Retool — invoices maio ausentes (Harry)',tags:['totalsec']},
+    {id:'thu4',label:'Hanhoo — check performance with Tracy',tags:['hanhoo']},
   ]},
   {name:'Friday',short:'FRI',calls:[],tasks:[
-    {id:'fri1',label:'Blossom report ready before 12pm',tags:['blossom']},
-    {id:'fri2',label:'Present Blossom report — document decisions',tags:['blossom']},
-    {id:'fri3',label:'Week close — what advanced, what is blocked',tags:['internal']},
-    {id:'fri4',label:'Payroll check — invoices / approvals pending?',tags:['finance']},
-    {id:'fri5',label:'Start agency weekly report draft for Monday',tags:['internal']},
+    {id:'fri1',label:'Week close — what advanced, what is blocked',tags:['internal']},
+    {id:'fri2',label:'Payroll check — invoices / approvals pending?',tags:['finance']},
+    {id:'fri3',label:'Start agency weekly report draft for Monday',tags:['internal']},
+    {id:'fri4',label:'Follow up Rhino Entertainment se sem resposta',tags:['leads']},
   ]},
 ];
 const MONTHLY=[
