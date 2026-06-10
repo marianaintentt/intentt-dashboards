@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milesopedia — Team Board</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F6F3;
+    --surface: #FFFFFF;
+    --surface2: #F0EEE9;
+    --border: #E4E1DA;
+    --border-strong: #C9C6BE;
+    --text: #1A1916;
+    --text-2: #5C5A54;
+    --text-3: #9B9891;
+    --accent: #2D6BE4;
+    --accent-light: #EBF1FC;
+    --green: #1E7A4A;
+    --green-light: #E8F5EE;
+    --amber: #A05C00;
+    --amber-light: #FEF3E2;
+    --red: #C0392B;
+    --red-light: #FDECEA;
+    --purple: #6B3FA0;
+    --purple-light: #F2ECFA;
+    --teal: #0D7377;
+    --teal-light: #E6F4F4;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 15px; font-weight: 600; color: var(--text); }
+  .logo span { color: var(--text-3); font-weight: 400; }
+  .week-badge {
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .progress-global {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .progress-bar-wrap {
+    width: 120px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width .3s;
+  }
+
+  /* LAYOUT */
+  .main { max-width: 1200px; margin: 0 auto; padding: 28px 32px; }
+  .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .board-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header-left { display: flex; align-items: center; gap: 8px; }
+  .role-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .card-name { font-size: 13px; font-weight: 600; }
+  .card-role { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+  .card-progress { font-size: 11px; color: var(--text-3); }
+  .card-body { padding: 12px 0; }
+
+  /* CHECKLIST */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+    padding: 4px 16px 6px;
+  }
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 16px;
+    transition: background .15s;
+    cursor: pointer;
+    position: relative;
+  }
+  .task-item:hover { background: var(--surface2); }
+  .task-item.done .task-text { text-decoration: line-through; color: var(--text-3); }
+  .task-item.blocked { background: var(--red-light); }
+  .task-item.blocked:hover { background: #fad8d5; }
+
+  .checkbox {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+    background: var(--surface);
+  }
+  .task-item.done .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .task-item.done .checkbox::after {
+    content: '';
+    width: 8px; height: 5px;
+    border-left: 1.5px solid white;
+    border-bottom: 1.5px solid white;
+    transform: rotate(-45deg) translate(1px, -1px);
+    display: block;
+  }
+
+  .task-right { flex: 1; min-width: 0; }
+  .task-text { font-size: 12.5px; color: var(--text); line-height: 1.4; }
+  .task-freq { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .task-note { font-size: 11px; color: var(--amber); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+  .task-note.blocked-note { color: var(--red); }
+
+  .note-input {
+    width: 100%;
+    font-size: 11px;
+    font-family: inherit;
+    border: none;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+    padding: 6px 16px;
+    color: var(--text-2);
+    outline: none;
+    resize: none;
+    display: none;
+  }
+  .note-input:focus { background: #fffef9; }
+  .note-btn {
+    font-size: 10px;
+    color: var(--text-3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin-top: 2px;
+    display: inline-block;
+  }
+  .note-btn:hover { color: var(--accent); background: var(--accent-light); }
+
+  .divider-light { height: 1px; background: var(--border); margin: 8px 0; }
+
+  /* INTELLIGENCE CARD */
+  .intel-card { grid-column: span 2; }
+  .intel-item {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .intel-item:last-child { border-bottom: none; }
+  .intel-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .intel-body { flex: 1; }
+  .intel-title { font-size: 12.5px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .intel-desc { font-size: 11.5px; color: var(--text-2); line-height: 1.5; }
+  .intel-tag {
+    display: inline-block;
+    font-size: 10px; font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+
+  /* CONTENT IDEAS */
+  .ideas-card { grid-column: span 2; }
+  .idea-item {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .idea-item:last-child { border-bottom: none; }
+  .idea-platform {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .idea-body { flex: 1; }
+  .idea-title { font-size: 12.5px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .idea-desc { font-size: 11.5px; color: var(--text-2); line-height: 1.5; }
+  .idea-why { font-size: 11px; color: var(--text-3); margin-top: 3px; font-style: italic; }
+
+  /* AUDREY STATUS */
+  .audrey-card {}
+  .audrey-item {
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .audrey-item:last-child { border-bottom: none; }
+  .audrey-content { font-size: 12px; color: var(--text); flex: 1; }
+  .audrey-days { font-size: 11px; font-weight: 500; }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+
+  /* RESET BUTTON */
+  .reset-btn {
+    font-size: 12px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .reset-btn:hover { background: var(--surface2); }
+
+  .full-width { grid-column: 1 / -1; }
+
+  @media (max-width: 900px) {
+    .board-grid { grid-template-columns: 1fr 1fr; }
+    .top-grid { grid-template-columns: 1fr; }
+    .intel-card, .ideas-card { grid-column: span 1; }
+    .main { padding: 16px; }
+  }
+  @media (max-width: 600px) {
+    .board-grid { grid-template-columns: 1fr; }
+    .header { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="logo">Milesopedia <span>/ Team Board</span></span>
+    <span class="week-badge" id="week-label"></span>
+  </div>
+  <div class="header-right">
+    <span class="progress-global" id="global-progress">0 / 0 done</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="global-bar" style="width:0%"></div>
+    </div>
+    <button class="reset-btn" onclick="resetWeek()">↺ Reset week</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- TOP ROW: Intelligence + Content Ideas -->
+  <div class="top-grid">
+
+    <!-- INTENTT INTELLIGENCE -->
+    <div class="card intel-card">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span style="font-size:15px">🧠</span>
+          <div>
+            <div class="card-name">Intentt Intelligence</div>
+            <div class="card-role">Proactive recommendations · updated weekly</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" id="intel-body">
+        <div class="intel-item">
+          <div class="intel-icon" style="background:var(--amber-light)">⚠️</div>
+          <div class="intel-body">
+            <div class="intel-title">Audrey approval lag is the #1 pipeline blocker</div>
+            <div class="intel-desc">Average response time is currently above 72h. Consider proposing a weekly 15-min async check-in or a standing approval window (e.g. every Tuesday by noon) to reduce back-and-forth.</div>
+            <span class="intel-tag" style="background:var(--amber-light);color:var(--amber)">Process risk</span>
+          </div>
+        </div>
+        <div class="intel-item">
+          <div class="intel-icon" style="background:var(--green-light)">📈</div>
+          <div class="intel-body">
+            <div class="intel-title">April is underutilized on Meta</div>
+            <div class="intel-desc">April is your only creator with conversions and currently allocated only to TikTok. Testing her on Meta (even 1 concept) could unlock a new performance ceiling — Tracey holds the consistency baseline so there's no risk to current results.</div>
+            <span class="intel-tag" style="background:var(--green-light);color:var(--green)">Growth opportunity</span>
+          </div>
+        </div>
+        <div class="intel-item">
+          <div class="intel-icon" style="background:var(--accent-light)">🔄</div>
+          <div class="intel-body">
+            <div class="intel-title">Giovani rotation is overdue</div>
+            <div class="intel-desc">Giovani is underperforming on both platforms with no recovery trend. Every week he stays active is spend that could go to Tracey or April. Recommend formalizing the rotation this cycle.</div>
+            <span class="intel-tag" style="background:var(--accent-light);color:var(--accent)">Action needed</span>
+          </div>
+        </div>
+        <div class="intel-item">
+          <div class="intel-icon" style="background:var(--purple-light)">💡</div>
+          <div class="intel-body">
+            <div class="intel-title">Cost per subscriber is the right metric — but track secondary signals too</div>
+            <div class="intel-desc">Add save rate and profile visits to your weekly tracking. They predict subscriber growth 1–2 weeks ahead and tell you if content is resonating before it converts.</div>
+            <span class="intel-tag" style="background:var(--purple-light);color:var(--purple)">Measurement</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT IDEAS -->
+    <div class="card ideas-card">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span style="font-size:15px">✨</span>
+          <div>
+            <div class="card-name">Content Ideas</div>
+            <div class="card-role">Based on what's working in travel rewards right now</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="idea-item">
+          <span class="idea-platform" style="background:#E8F0FE;color:#1A56DB">IG + TT</span>
+          <div class="idea-body">
+            <div class="idea-title">"I redeemed X points for Y" — real redemption stories</div>
+            <div class="idea-desc">Creator shows their actual redemption: business class seat, hotel night, or cash back — with the dollar value revealed at the end. Hook: "I paid $0 for this flight."</div>
+            <div class="idea-why">Why now: redemption content is outperforming educational content 3:1 on both platforms in the personal finance space.</div>
+          </div>
+        </div>
+        <div class="idea-item">
+          <span class="idea-platform" style="background:#FEF3E2;color:#A05C00">TikTok</span>
+          <div class="idea-body">
+            <div class="idea-title">Side-by-side card comparison (scroll-stop format)</div>
+            <div class="idea-desc">Two cards on screen, fast-cut comparison — earn rate, sign-up bonus, annual fee. No voiceover needed, just on-screen text. Works as a loop.</div>
+            <div class="idea-why">Why now: comparison content with no talking head is growing +40% on TikTok finance accounts Q2 2026.</div>
+          </div>
+        </div>
+        <div class="idea-item">
+          <span class="idea-platform" style="background:#EBF1FC;color:#2D6BE4">Instagram</span>
+          <div class="idea-body">
+            <div class="idea-title">Carousel: "Best cards for [specific life event]"</div>
+            <div class="idea-desc">Moving to a new city, getting married, first job, planning a baby. Hyper-specific angles with card recs per scenario. Very saveable = strong organic reach signal.</div>
+            <div class="idea-why">Why now: save rate on life-event carousels is 2–3x higher than generic "best cards" content. Saves predict subscriber growth.</div>
+          </div>
+        </div>
+        <div class="idea-item">
+          <span class="idea-platform" style="background:#E8F5EE;color:#1E7A4A">IG + TT</span>
+          <div class="idea-body">
+            <div class="idea-title">"Points mistake I made" — anti-advice format</div>
+            <div class="idea-desc">Creator admits a real mistake (wrong card for groceries, missed sign-up bonus, points expired). Builds trust fast. Comments will be extremely active — people share their own mistakes.</div>
+            <div class="idea-why">Why now: vulnerability/mistake content from finance creators is the highest comment-driver in the category right now.</div>
+          </div>
+        </div>
+        <div class="idea-item">
+          <span class="idea-platform" style="background:#FEF3E2;color:#A05C00">TikTok</span>
+          <div class="idea-body">
+            <div class="idea-title">Reply to comments series — "you asked, here's the answer"</div>
+            <div class="idea-desc">Pick the top question from comments each week, creator answers in a 30–45s video with the comment pinned on screen. Builds community, feeds the algorithm with replies.</div>
+            <div class="idea-why">Why now: TikTok is actively boosting reply-to-comment videos in the finance category as part of their creator retention push.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST BOARD -->
+  <div class="board-grid" id="board"></div>
+
+</main>
+
+<script>
+const STORAGE_KEY = 'miles_board_v2';
+const WEEK_KEY = 'miles_week_v2';
+
+function getWeekId() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  return monday.toISOString().slice(0, 10);
+}
+
+function getWeekLabel() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+  return `Week of ${fmt(monday)} – ${fmt(sunday)}`;
+}
+
+const TEAM = [
+  {
+    id: 'lais',
+    name: 'Laís',
+    role: 'Social Media & Coordination',
+    color: '#7C3AED',
+    tasks: [
+      { id: 'l1', text: 'Check & reply to IG comments', freq: 'Daily' },
+      { id: 'l2', text: 'Check new follows / engagement opportunities', freq: 'Daily' },
+      { id: 'l3', text: 'Update Notion pipeline if any stage changed', freq: 'Daily' },
+      { id: 'l4', text: 'Check if Audrey replied to pending approvals', freq: 'Daily' },
+      { id: 'l5', text: 'Weekly pipeline status report to Mariana', freq: 'Monday' },
+      { id: 'l6', text: 'Send brief to creator(s) with delivery due this week', freq: 'Tuesday' },
+      { id: 'l7', text: 'QA assets from creators before uploading for approval', freq: 'Thursday' },
+      { id: 'l8', text: 'Week close: approved / pending / next week actions', freq: 'Friday' },
+    ]
+  },
+  {
+    id: 'maia',
+    name: 'Maia',
+    role: 'Media Buyer',
+    color: '#0D7377',
+    tasks: [
+      { id: 'm1', text: 'Check active campaigns — flag if CPA/CPR >15% worse', freq: 'Daily' },
+      { id: 'm2', text: 'Verify no campaign paused, rejected, or out of budget', freq: 'Daily' },
+      { id: 'm3', text: 'Log any optimization made (bid, audience, creative swap)', freq: 'Daily' },
+      { id: 'm4', text: 'Weekly summary: what ran, key metrics, optimizations', freq: 'Monday' },
+      { id: 'm5', text: 'Mid-week review: any campaign needs adjustment?', freq: 'Wednesday' },
+      { id: 'm6', text: 'Prep biweekly report data (verify campaign filter)', freq: 'Biweekly Friday' },
+      { id: 'm7', text: 'Upload new approved creative to platforms', freq: 'As needed' },
+    ]
+  },
+  {
+    id: 'alejandra',
+    name: 'Alejandra',
+    role: 'Creative Manager',
+    color: '#C0392B',
+    tasks: [
+      { id: 'a1', text: 'Review top/bottom performers with Maia', freq: 'Monday' },
+      { id: 'a2', text: 'Define angle for new script batch', freq: 'Tuesday' },
+      { id: 'a3', text: 'Review & approve scripts before going to Audrey', freq: 'Wednesday' },
+      { id: 'a4', text: 'Creative analysis: what to test next cycle', freq: 'Friday' },
+      { id: 'a5', text: 'Brief Laís with approved angle for creator coordination', freq: 'Per batch' },
+      { id: 'a6', text: 'Document hooks/concepts that performed this cycle', freq: 'Biweekly' },
+    ]
+  },
+  {
+    id: 'mariana',
+    name: 'Mariana',
+    role: 'Operations Manager',
+    color: '#2D6BE4',
+    tasks: [
+      { id: 'mr1', text: 'Check board — any flags from the team?', freq: 'Daily' },
+      { id: 'mr2', text: 'Follow up Audrey if approval pending >48h', freq: 'Daily' },
+      { id: 'mr3', text: 'Receive summaries from Laís + Maia, identify blockers', freq: 'Monday' },
+      { id: 'mr4', text: 'Week review: progress, delays, decisions needed', freq: 'Friday' },
+      { id: 'mr5', text: 'Build & deliver biweekly report to Audrey', freq: 'Biweekly' },
+      { id: 'mr6', text: 'Strategic review: creators, budget, creative direction', freq: 'Biweekly' },
+      { id: 'mr7', text: 'Update Claude project docs (approved scripts, performance)', freq: 'Biweekly' },
+    ]
+  }
+];
+
+// Audrey pending approvals (static demo — can be updated manually)
+const AUDREY_ITEMS = [
+  { content: 'Script: April — TikTok comparison concept', days: 3, status: 'overdue' },
+  { content: 'Asset: Tracey — Meta carousel Week 23', days: 1, status: 'ok' },
+  { content: 'Script: Jamie — IG Reels redemption story', days: 0, status: 'new' },
+];
+
+let state = {};
+
+function loadState() {
+  const weekId = getWeekId();
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const savedWeek = localStorage.getItem(WEEK_KEY);
+  if (saved && savedWeek === weekId) {
+    state = JSON.parse(saved);
+  } else {
+    // New week — reset
+    state = {};
+    localStorage.setItem(WEEK_KEY, weekId);
+    saveState();
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function getTask(taskId) {
+  return state[taskId] || { done: false, note: '' };
+}
+
+function toggleTask(taskId) {
+  const t = getTask(taskId);
+  state[taskId] = { ...t, done: !t.done };
+  saveState();
+  renderBoard();
+  updateProgress();
+}
+
+function setNote(taskId, note) {
+  const t = getTask(taskId);
+  state[taskId] = { ...t, note };
+  saveState();
+}
+
+function resetWeek() {
+  if (!confirm('Reset all checkboxes for this week?')) return;
+  state = {};
+  saveState();
+  renderBoard();
+  updateProgress();
+}
+
+function updateProgress() {
+  let total = 0, done = 0;
+  TEAM.forEach(member => {
+    member.tasks.forEach(task => {
+      total++;
+      if (getTask(task.id).done) done++;
+    });
+  });
+  document.getElementById('global-progress').textContent = `${done} / ${total} done`;
+  document.getElementById('global-bar').style.width = total ? `${Math.round(done/total*100)}%` : '0%';
+}
+
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  TEAM.forEach(member => {
+    const totalTasks = member.tasks.length;
+    const doneTasks = member.tasks.filter(t => getTask(t.id).done).length;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    // Header
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-header-left">
+          <div class="role-dot" style="background:${member.color}"></div>
+          <div>
+            <div class="card-name">${member.name}</div>
+            <div class="card-role">${member.role}</div>
+          </div>
+        </div>
+        <div class="card-progress">${doneTasks}/${totalTasks}</div>
+      </div>
+      <div class="card-body" id="body-${member.id}"></div>
+    `;
+
+    board.appendChild(card);
+
+    const body = card.querySelector(`#body-${member.id}`);
+
+    // Group daily vs weekly
+    const daily = member.tasks.filter(t => t.freq === 'Daily');
+    const other = member.tasks.filter(t => t.freq !== 'Daily');
+
+    if (daily.length) {
+      const label = document.createElement('div');
+      label.className = 'section-label';
+      label.textContent = 'Daily';
+      body.appendChild(label);
+      daily.forEach(task => body.appendChild(buildTask(task)));
+    }
+
+    if (other.length) {
+      if (daily.length) {
+        const div = document.createElement('div');
+        div.className = 'divider-light';
+        body.appendChild(div);
+      }
+      const label = document.createElement('div');
+      label.className = 'section-label';
+      label.textContent = 'Weekly / scheduled';
+      body.appendChild(label);
+      other.forEach(task => body.appendChild(buildTask(task)));
+    }
+
+    // Audrey section for Mariana and Laís
+    if (member.id === 'mariana' || member.id === 'lais') {
+      const div = document.createElement('div');
+      div.className = 'divider-light';
+      body.appendChild(div);
+
+      const label = document.createElement('div');
+      label.className = 'section-label';
+      label.textContent = 'Audrey — pending approvals';
+      body.appendChild(label);
+
+      AUDREY_ITEMS.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'audrey-item';
+        const dotColor = item.status === 'overdue' ? 'var(--red)' : item.status === 'ok' ? 'var(--amber)' : 'var(--green)';
+        const daysText = item.days === 0 ? 'New today' : item.days === 1 ? '1 day waiting' : `${item.days} days waiting`;
+        const daysColor = item.status === 'overdue' ? 'var(--red)' : 'var(--amber)';
+        el.innerHTML = `
+          <div class="status-dot" style="background:${dotColor}"></div>
+          <div class="audrey-content">${item.content}</div>
+          <div class="audrey-days" style="color:${daysColor}">${daysText}</div>
+        `;
+        body.appendChild(el);
+      });
+    }
+  });
+}
+
+function buildTask(task) {
+  const t = getTask(task.id);
+  const item = document.createElement('div');
+  item.className = 'task-item' + (t.done ? ' done' : '');
+  item.dataset.id = task.id;
+
+  item.innerHTML = `
+    <div class="checkbox"></div>
+    <div class="task-right">
+      <div class="task-text">${task.text}</div>
+      <div class="task-freq">${task.freq}</div>
+      ${t.note ? `<div class="task-note">📝 ${t.note}</div>` : ''}
+      ${!t.note ? `<button class="note-btn" onclick="event.stopPropagation();showNoteInput('${task.id}', this)">+ note</button>` : ''}
+      <textarea class="note-input" id="note-${task.id}" placeholder="Add a note or flag a blocker…" onblur="saveNote('${task.id}', this)">${t.note || ''}</textarea>
+    </div>
+  `;
+
+  item.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'TEXTAREA') return;
+    toggleTask(task.id);
+  });
+
+  return item;
+}
+
+function showNoteInput(taskId, btn) {
+  const ta = document.getElementById(`note-${taskId}`);
+  ta.style.display = 'block';
+  ta.focus();
+  btn.style.display = 'none';
+}
+
+function saveNote(taskId, ta) {
+  const note = ta.value.trim();
+  setNote(taskId, note);
+  renderBoard();
+}
+
+// Init
+document.getElementById('week-label').textContent = getWeekLabel();
+loadState();
+renderBoard();
+updateProgress();
+</script>
+</body>
+</html>
