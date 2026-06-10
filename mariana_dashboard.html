@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mariana — Weekly Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F7F6F3; --surface: #FFFFFF; --surface2: #F0EEE9;
+    --border: #E4E1DA; --border-strong: #C9C6BE;
+    --text: #1A1916; --text-2: #5C5A54; --text-3: #9B9891;
+    --green: #1E7A4A; --green-light: #E8F5EE;
+    --amber: #A05C00; --amber-light: #FEF3E2;
+    --red: #C0392B; --red-light: #FDECEA;
+    --blue: #2D6BE4; --blue-light: #EBF1FC;
+    --purple: #6B3FA0; --purple-light: #F2ECFA;
+    --teal: #0D7377; --teal-light: #E6F4F4;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .logo { font-size: 14px; font-weight: 600; }
+  .logo span { color: var(--text-3); font-weight: 400; }
+  .date-badge { font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--text-2); padding: 3px 10px; border-radius: 20px; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .progress-text { font-size: 11px; color: var(--text-3); }
+  .progress-track { width: 100px; height: 4px; background: var(--border); border-radius: 2px; }
+  .progress-fill { height: 4px; background: var(--green); border-radius: 2px; transition: width .3s; }
+  .reset-btn { font-size: 11px; background: none; border: 1px solid var(--border); color: var(--text-2); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; }
+  .reset-btn:hover { background: var(--surface2); }
+  .main { max-width: 1100px; margin: 0 auto; padding: 24px 28px; }
+  .week-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
+  .day-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .day-col.today { border-color: var(--blue); }
+  .day-header { padding: 10px 12px 8px; border-bottom: 1px solid var(--border); }
+  .day-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--text-3); }
+  .day-date { font-size: 18px; font-weight: 600; color: var(--text); margin-top: 1px; }
+  .day-col.today .day-date { color: var(--blue); }
+  .day-body { padding: 8px 0; }
+  .call-item { padding: 6px 12px; display: flex; align-items: flex-start; gap: 7px; }
+  .call-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+  .call-text { font-size: 11px; color: var(--text); line-height: 1.4; }
+  .call-time { font-size: 10px; color: var(--text-3); }
+  .day-empty { padding: 10px 12px; font-size: 11px; color: var(--text-3); font-style: italic; }
+  .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .left-col { display: flex; flex-direction: column; gap: 16px; }
+  .right-col { display: flex; flex-direction: column; gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-header-left { display: flex; align-items: center; gap: 8px; }
+  .card-title { font-size: 13px; font-weight: 600; }
+  .card-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+  .card-count { font-size: 11px; color: var(--text-3); }
+  .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); padding: 8px 16px 4px; }
+  .task { display: flex; align-items: flex-start; gap: 10px; padding: 7px 16px; cursor: pointer; transition: background .12s; }
+  .task:hover { background: var(--surface2); }
+  .task.done .task-label { text-decoration: line-through; color: var(--text-3); }
+  .checkbox { width: 15px; height: 15px; border: 1.5px solid var(--border-strong); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; background: var(--surface); transition: all .15s; }
+  .task.done .checkbox { background: var(--green); border-color: var(--green); }
+  .task.done .checkbox::after { content: ''; width: 7px; height: 4px; border-left: 1.5px solid white; border-bottom: 1.5px solid white; transform: rotate(-45deg) translate(1px,-1px); display: block; }
+  .task-right { flex: 1; min-width: 0; }
+  .task-label { font-size: 12.5px; color: var(--text); line-height: 1.4; }
+  .task-meta { font-size: 10px; color: var(--text-3); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .task-tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 10px; }
+  .divider { height: 1px; background: var(--border); margin: 6px 0; }
+  .tag-miles { background: #EBF1FC; color: #2D6BE4; }
+  .tag-blossom { background: #F2ECFA; color: #6B3FA0; }
+  .tag-neobet { background: #FEF3E2; color: #A05C00; }
+  .tag-hanhoo { background: #E6F4F4; color: #0D7377; }
+  .tag-totalsec { background: #E8F5EE; color: #1E7A4A; }
+  .tag-bettermerx { background: #FDECEA; color: #C0392B; }
+  .tag-internal { background: var(--surface2); color: var(--text-2); }
+  .tag-finance { background: #FEF3E2; color: #A05C00; }
+  .tag-hr { background: #F2ECFA; color: #6B3FA0; }
+  .tag-leads { background: #E6F4F4; color: #0D7377; }
+  .calm-item { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .calm-item:last-child { border-bottom: none; }
+  .calm-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+  .calm-title { font-size: 12.5px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .calm-desc { font-size: 11.5px; color: var(--text-2); line-height: 1.5; }
+  .upcoming-item { padding: 9px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .upcoming-item:last-child { border-bottom: none; }
+  .upcoming-date { font-size: 11px; font-weight: 500; color: var(--text-2); min-width: 58px; }
+  .upcoming-text { font-size: 12px; color: var(--text); flex: 1; }
+  .upcoming-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .lead-item { padding: 9px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .lead-item:last-child { border-bottom: none; }
+  .lead-name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .lead-co { font-size: 11px; color: var(--text-3); }
+  .lead-status { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; white-space: nowrap; }
+  .status-hot { background: var(--red-light); color: var(--red); }
+  .status-warm { background: var(--amber-light); color: var(--amber); }
+  .status-cold { background: var(--surface2); color: var(--text-3); }
+  .status-active { background: var(--green-light); color: var(--green); }
+  @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .week-strip { grid-template-columns: repeat(3, 1fr); } .main { padding: 16px; } }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <span class="logo">Mariana <span>/ Weekly Dashboard</span></span>
+    <span class="date-badge" id="week-label"></span>
+  </div>
+  <div class="header-right">
+    <span class="progress-text" id="progress-text">0 / 0</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <button class="reset-btn" onclick="resetWeek()">↺ New week</button>
+  </div>
+</header>
+<main class="main">
+  <div class="week-strip" id="week-strip"></div>
+  <div class="main-grid">
+    <div class="left-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <span style="font-size:16px">📋</span>
+            <div><div class="card-title">Weekly tasks</div><div class="card-sub">By day and area</div></div>
+          </div>
+          <span class="card-count" id="task-count"></span>
+        </div>
+        <div id="tasks-body"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <span style="font-size:16px">💡</span>
+            <div><div class="card-title">When you have free time</div><div class="card-sub">High leverage, never feels urgent</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-miles">Milesopedia</span><span class="task-tag tag-leads">Growth</span></div><div class="calm-title">Test April on Meta — 1 concept</div><div class="calm-desc">She's your only creator with conversions and TikTok-only. Brief Alejandra to define an angle. Low risk, high upside.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-miles">Milesopedia</span></div><div class="calm-title">Formalize Giovani rotation</div><div class="calm-desc">Underperforming on both platforms. Every week he stays is wasted spend. Write the email to Audrey — it's 10 minutes.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-leads">Leads</span></div><div class="calm-title">Follow up: Rhino Entertainment</div><div class="calm-desc">Call done, proposal in progress. If no follow-up this week, send one now. Use the template in Growth & Proposals project.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-leads">Leads</span></div><div class="calm-title">LinkedIn outreach — Paul Pellizzari (Hard Rock Bet)</div><div class="calm-desc">VP Global Social. Flagged at SBC Toronto, no outreach yet. 3 sentences, reference iGaming experience.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-finance">Finance</span></div><div class="calm-title">Prep July invoice templates now</div><div class="calm-desc">July 1st invoices for all clients (except Milesopedia day 15). Getting templates ready now means zero scramble on July 1st.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-internal">Internal</span></div><div class="calm-title">Document one SOP this week</div><div class="calm-desc">Pick any process that lives only in your head — Euka workflow, payroll cycle, Blossom reporting. 20 min writing saves hours later.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-hr">HR</span></div><div class="calm-title">Async check-in with team</div><div class="calm-desc">10 min message to each person asking if they're blocked. Especially Laís and Harry. No meeting needed.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="right-col">
+      <div class="card">
+        <div class="card-header"><div class="card-header-left"><span style="font-size:16px">📅</span><div><div class="card-title">Upcoming deadlines</div></div></div></div>
+        <div>
+          <div class="upcoming-item"><div class="upcoming-date">Jun 15</div><div class="upcoming-dot" style="background:var(--purple)"></div><div class="upcoming-text">Milesopedia invoice + biweekly report</div></div>
+          <div class="upcoming-item"><div class="upcoming-date">Every Fri</div><div class="upcoming-dot" style="background:var(--purple)"></div><div class="upcoming-text">Blossom weekly report (before 12pm)</div></div>
+          <div class="upcoming-item"><div class="upcoming-date">Every Mon</div><div class="upcoming-dot" style="background:var(--blue)"></div><div class="upcoming-text">Agency weekly report (before 10am)</div></div>
+          <div class="upcoming-item"><div class="upcoming-date">Jul 1</div><div class="upcoming-dot" style="background:var(--amber)"></div><div class="upcoming-text">Invoices — all clients except Milesopedia</div></div>
+          <div class="upcoming-item"><div class="upcoming-date">Ongoing</div><div class="upcoming-dot" style="background:var(--red)"></div><div class="upcoming-text">Audrey approvals — follow up if >48h</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-header-left"><span style="font-size:16px">🎯</span><div><div class="card-title">Active leads</div></div></div></div>
+        <div>
+          <div class="lead-item"><div><div class="lead-name">Dylan Liebenberg</div><div class="lead-co">NeoBet</div></div><span class="lead-status status-hot">2nd call pending</span></div>
+          <div class="lead-item"><div><div class="lead-name">Rhino Entertainment</div><div class="lead-co">Bowen / Geraldine / Mark</div></div><span class="lead-status status-hot">Proposal in progress</span></div>
+          <div class="lead-item"><div><div class="lead-name">Shubham Arora</div><div class="lead-co">Raffle World</div></div><span class="lead-status status-warm">Follow-up pending</span></div>
+          <div class="lead-item"><div><div class="lead-name">ATOM (Alex Lovallo)</div><div class="lead-co">ATOM</div></div><span class="lead-status status-warm">Scripts in review</span></div>
+          <div class="lead-item"><div><div class="lead-name">Paul Pellizzari</div><div class="lead-co">Hard Rock Bet</div></div><span class="lead-status status-cold">No outreach yet</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-header-left"><span style="font-size:16px">🟢</span><div><div class="card-title">Client health</div></div></div></div>
+        <div>
+          <div class="lead-item"><div><div class="lead-name">Milesopedia</div></div><span class="lead-status status-warm">Audrey lag</span></div>
+          <div class="lead-item"><div><div class="lead-name">BetterMeRx</div></div><span class="lead-status status-active">Active</span></div>
+          <div class="lead-item"><div><div class="lead-name">NeoBet Ontario</div></div><span class="lead-status status-active">Active</span></div>
+          <div class="lead-item"><div><div class="lead-name">Hanhoo TikTok Shop</div></div><span class="lead-status status-active">Active</span></div>
+          <div class="lead-item"><div><div class="lead-name">Total Security</div></div><span class="lead-status status-active">Active</span></div>
+          <div class="lead-item"><div><div class="lead-name">Blossom</div></div><span class="lead-status status-active">Active</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+const STORAGE_KEY='mariana_dash_v1',WEEK_KEY='mariana_week_v1';
+function getWeekId(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));return m.toISOString().slice(0,10);}
+function getWeekLabel(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));const s=new Date(m);s.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('en-CA',{month:'short',day:'numeric'});return`Week of ${f(m)} – ${f(s)}`;}
+function getTodayIdx(){const d=new Date().getDay();return d===0?4:d-1;}
+const DAYS=[
+  {name:'Monday',short:'MON',calls:[{time:'10:00am',text:'Agency Weekly Meeting',color:'#2D6BE4'}],tasks:[
+    {id:'mon1',label:'Agency weekly report ready before 10am',tags:['internal']},
+    {id:'mon2',label:'Present report — flag blockers to Mike',tags:['internal']},
+    {id:'mon3',label:'Receive pipeline status from Laís',tags:['miles']},
+    {id:'mon4',label:'Receive weekly summary from Maia',tags:['miles']},
+    {id:'mon5',label:'Check Audrey pending approvals — follow up if >48h',tags:['miles']},
+  ]},
+  {name:'Tuesday',short:'TUE',calls:[{time:'9:00am',text:'Team Leads Weekly',color:'#6B3FA0'},{time:'10:00am',text:'General Weekly',color:'#0D7377'}],tasks:[
+    {id:'tue1',label:'Team Leads — review blockers, decisions needed',tags:['internal']},
+    {id:'tue2',label:'General Weekly — present week priorities',tags:['internal']},
+    {id:'tue3',label:'Check active leads — any follow-up due this week?',tags:['leads']},
+    {id:'tue4',label:'Check affiliate activity if anything flagged',tags:['internal']},
+  ]},
+  {name:'Wednesday',short:'WED',calls:[],tasks:[
+    {id:'wed1',label:'Mid-week client check — any campaign issues from Maia?',tags:['internal']},
+    {id:'wed2',label:'Check Audrey approvals — follow up if >48h',tags:['miles']},
+    {id:'wed3',label:'BetterMeRx — production status check',tags:['bettermerx']},
+    {id:'wed4',label:'NeoBet — anything pending compliance with Alexanjelo?',tags:['neobet']},
+  ]},
+  {name:'Thursday',short:'THU',calls:[],tasks:[
+    {id:'thu1',label:'Review Laís QA on creator assets',tags:['miles']},
+    {id:'thu2',label:'Total Security Retool dashboard — any anomalies?',tags:['totalsec']},
+    {id:'thu3',label:'Hanhoo — check performance with Tracy',tags:['hanhoo']},
+    {id:'thu4',label:'Prep Blossom report data for Friday call',tags:['blossom']},
+  ]},
+  {name:'Friday',short:'FRI',calls:[{time:'12:00pm',text:'Blossom Weekly Recap',color:'#6B3FA0'}],tasks:[
+    {id:'fri1',label:'Blossom report ready before 12pm',tags:['blossom']},
+    {id:'fri2',label:'Present Blossom report — document decisions',tags:['blossom']},
+    {id:'fri3',label:'Week close — what advanced, what is blocked',tags:['internal']},
+    {id:'fri4',label:'Payroll check — any invoices or approvals pending?',tags:['finance']},
+    {id:'fri5',label:'Start agency weekly report draft for Monday',tags:['internal']},
+  ]},
+];
+const MONTHLY=[
+  {id:'mo1',label:'Day 1 — Invoices to all clients (except Milesopedia)',tags:['finance']},
+  {id:'mo2',label:'Day 1 — Validate TopTal/HireGlobal invoice labels match payment period',tags:['finance']},
+  {id:'mo3',label:'Day 15 — Milesopedia invoice',tags:['finance','miles']},
+  {id:'mo4',label:'Day 15 — Milesopedia biweekly report',tags:['miles']},
+  {id:'mo5',label:'End of month — Payroll review (Deel CAD + TopTal/HireGlobal USD)',tags:['finance','hr']},
+  {id:'mo6',label:'Ongoing — HR: onboarding, contracts, recruitment pipeline',tags:['hr']},
+];
+const TAG_C={miles:'tag-miles',blossom:'tag-blossom',neobet:'tag-neobet',hanhoo:'tag-hanhoo',totalsec:'tag-totalsec',bettermerx:'tag-bettermerx',internal:'tag-internal',finance:'tag-finance',hr:'tag-hr',leads:'tag-leads'};
+const TAG_L={miles:'Milesopedia',blossom:'Blossom',neobet:'NeoBet',hanhoo:'Hanhoo',totalsec:'Total Security',bettermerx:'BetterMeRx',internal:'Internal',finance:'Finance',hr:'HR',leads:'Leads'};
+let state={};
+function loadState(){const w=getWeekId(),s=localStorage.getItem(STORAGE_KEY),sw=localStorage.getItem(WEEK_KEY);if(s&&sw===w){state=JSON.parse(s);}else{state={};localStorage.setItem(WEEK_KEY,w);saveState();}}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function isDone(id){return state[id]===true;}
+function toggle(id){state[id]=!isDone(id);saveState();render();}
+function resetWeek(){if(!confirm('Reset all tasks for this week?'))return;state={};saveState();render();}
+function allTasks(){return[...DAYS.flatMap(d=>d.tasks),...MONTHLY];}
+function updateProgress(){const all=allTasks(),done=all.filter(t=>isDone(t.id)).length;document.getElementById('progress-text').textContent=`${done} / ${all.length}`;document.getElementById('progress-fill').style.width=`${Math.round(done/all.length*100)}%`;document.getElementById('task-count').textContent=`${done} / ${all.length} done`;}
+function buildTask(task){const div=document.createElement('div');div.className='task'+(isDone(task.id)?' done':'');div.onclick=()=>toggle(task.id);const tags=task.tags.map(t=>`<span class="task-tag ${TAG_C[t]}">${TAG_L[t]}</span>`).join('');div.innerHTML=`<div class="checkbox"></div><div class="task-right"><div class="task-label">${task.label}</div><div class="task-meta">${tags}</div></div>`;return div;}
+function render(){
+  const strip=document.getElementById('week-strip');strip.innerHTML='';
+  const todayIdx=getTodayIdx(),now=new Date(),mon=new Date(now);
+  mon.setDate(now.getDate()-((now.getDay()+6)%7));
+  DAYS.forEach((day,i)=>{
+    const date=new Date(mon);date.setDate(mon.getDate()+i);
+    const col=document.createElement('div');col.className='day-col'+(i===todayIdx?' today':'');
+    const callsHtml=day.calls.map(c=>`<div class="call-item"><div class="call-dot" style="background:${c.color}"></div><div><div class="call-text">${c.text}</div><div class="call-time">${c.time}</div></div></div>`).join('');
+    col.innerHTML=`<div class="day-header"><div class="day-name">${day.short}</div><div class="day-date">${date.getDate()}</div></div><div class="day-body">${callsHtml||'<div class="day-empty">No calls</div>'}</div>`;
+    strip.appendChild(col);
+  });
+  const body=document.getElementById('tasks-body');body.innerHTML='';
+  DAYS.forEach(day=>{
+    const lbl=document.createElement('div');lbl.className='section-label';lbl.textContent=day.name;body.appendChild(lbl);
+    day.tasks.forEach(t=>body.appendChild(buildTask(t)));
+    const div=document.createElement('div');div.className='divider';body.appendChild(div);
+  });
+  const mlbl=document.createElement('div');mlbl.className='section-label';mlbl.textContent='Monthly / Recurring';body.appendChild(mlbl);
+  MONTHLY.forEach(t=>body.appendChild(buildTask(t)));
+  updateProgress();
+}
+document.getElementById('week-label').textContent=getWeekLabel();
+loadState();render();
+</script>
+</body>
+</html>
