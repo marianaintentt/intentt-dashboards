@@ -94,6 +94,13 @@
   .status-warm { background: var(--amber-light); color: var(--amber); }
   .status-cold { background: var(--surface2); color: var(--text-3); }
   .status-active { background: var(--green-light); color: var(--green); }
+  .slack-msg { padding: 9px 16px; border-bottom: 1px solid var(--border); }
+  .slack-msg:last-child { border-bottom: none; }
+  .slack-sender { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+  .slack-time { font-size: 10px; color: var(--text-3); font-weight: 400; }
+  .slack-text { font-size: 11.5px; color: var(--text-2); line-height: 1.5; }
+  .slack-ch { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .sync-tag { font-size: 10px; background: var(--green-light); color: var(--green); padding: 1px 7px; border-radius: 10px; font-weight: 500; }
   @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .week-strip { grid-template-columns: repeat(3, 1fr); } .main { padding: 16px; } }
 </style>
 </head>
@@ -133,15 +140,66 @@
         <div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-miles">Milesopedia</span><span class="task-tag tag-leads">Growth</span></div><div class="calm-title">Test April on Meta — 1 concept</div><div class="calm-desc">She's your only creator with conversions and TikTok-only. Brief Alejandra to define an angle. Low risk, high upside.</div></div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-miles">Milesopedia</span></div><div class="calm-title">Formalize Giovani rotation</div><div class="calm-desc">Underperforming on both platforms. Every week he stays is wasted spend. Write the email to Audrey — it's 10 minutes.</div></div>
-          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-leads">Leads</span></div><div class="calm-title">Follow up: Rhino Entertainment</div><div class="calm-desc">Call done, proposal in progress. If no follow-up this week, send one now. Use the template in Growth & Proposals project.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-leads">Leads</span></div><div class="calm-title">Follow up: Rhino Entertainment</div><div class="calm-desc">Call done, proposal in progress. If no follow-up this week, send one now.</div></div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-leads">Leads</span></div><div class="calm-title">LinkedIn outreach — Paul Pellizzari (Hard Rock Bet)</div><div class="calm-desc">VP Global Social. Flagged at SBC Toronto, no outreach yet. 3 sentences, reference iGaming experience.</div></div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-finance">Finance</span></div><div class="calm-title">Prep July invoice templates now</div><div class="calm-desc">July 1st invoices for all clients (except Milesopedia day 15). Getting templates ready now means zero scramble on July 1st.</div></div>
           <div class="calm-item"><div class="calm-header"><span class="task-tag tag-internal">Internal</span></div><div class="calm-title">Document one SOP this week</div><div class="calm-desc">Pick any process that lives only in your head — Euka workflow, payroll cycle, Blossom reporting. 20 min writing saves hours later.</div></div>
-          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-hr">HR</span></div><div class="calm-title">Async check-in with team</div><div class="calm-desc">10 min message to each person asking if they're blocked. Especially Laís and Harry. No meeting needed.</div></div>
+          <div class="calm-item"><div class="calm-header"><span class="task-tag tag-hr">HR</span></div><div class="calm-title">Async check-in with team</div><div class="calm-desc">10 min message to each person asking if they're blocked. Especialmente Laís e Harry. No meeting needed.</div></div>
         </div>
       </div>
     </div>
     <div class="right-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <span style="font-size:16px">💬</span>
+            <div><div class="card-title">Slack — últimas 48h</div><div class="card-sub">Sync: Jun 10, 11:42am ET · 8 msgs</div></div>
+          </div>
+          <span class="sync-tag">Live</span>
+        </div>
+        <div>
+          <div class="slack-msg">
+            <div class="slack-sender">Mariana → Mike <span class="slack-time">Jun 10, 1:10pm</span></div>
+            <div class="slack-text">@Mike please let me know once you finished reviewing the commissions, so I can finalize the payrolls for this month</div>
+            <div class="slack-ch">Group DM · Mike, Alexanjelo</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Mariana → Harry <span class="slack-time">Jun 10, 12:47pm</span></div>
+            <div class="slack-text">hey harry, I noticed that for the month of may there are some invoices that are on the spreadsheet, but are not being displayed on the retool dashboard. tomorrow could you take a look?</div>
+            <div class="slack-ch">#intentt-finance</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Alexanjelo <span class="slack-time">Jun 10, 12:17pm</span></div>
+            <div class="slack-text">Just wanted to confirm all of our clients for both affiliate and agency. Our clients are: Milesopedia, Aposta Premia, Total Security, Blossom, Applyboard, BetterMe RX, Atom — Did I miss any? Also, do you happen to know which of these are affiliate, agency, or external creatives?</div>
+            <div class="slack-ch">DM · Alexanjelo (compliance)</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Alexanjelo <span class="slack-time">Jun 10, 12:09pm</span></div>
+            <div class="slack-text">Thanks for forwarding the Total Security email</div>
+            <div class="slack-ch">DM · Alexanjelo</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Mariana → Mike <span class="slack-time">Jun 10, 11:55am</span></div>
+            <div class="slack-text">do you think it's alright if I share this spreadsheet with Zina, instead of keep updating that other one that she uses? That one is a bit confusing and doesn't show the full picture</div>
+            <div class="slack-ch">DM · Mike</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Laís <span class="slack-time">Jun 10, 11:49am</span></div>
+            <div class="slack-text">a outra nao vi ainda</div>
+            <div class="slack-ch">DM · Laís</div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-sender">Mike <span class="slack-time">Jun 10, 12:19pm</span></div>
+            <div class="slack-text">yeah of course it is / thank you!</div>
+            <div class="slack-ch">DM · Mike</div>
+          </div>
+          <div class="slack-msg" style="background:var(--amber-light);">
+            <div class="slack-sender" style="color:var(--amber)">⚠️ Ação pendente <span class="slack-time">payroll</span></div>
+            <div class="slack-text" style="color:var(--amber)">Mike ainda revisando comissões — payroll de junho bloqueado até ele confirmar.</div>
+            <div class="slack-ch">Flag automática</div>
+          </div>
+        </div>
+      </div>
       <div class="card">
         <div class="card-header"><div class="card-header-left"><span style="font-size:16px">📅</span><div><div class="card-title">Upcoming deadlines</div></div></div></div>
         <div>
@@ -158,8 +216,9 @@
           <div class="lead-item"><div><div class="lead-name">Dylan Liebenberg</div><div class="lead-co">NeoBet</div></div><span class="lead-status status-hot">2nd call pending</span></div>
           <div class="lead-item"><div><div class="lead-name">Rhino Entertainment</div><div class="lead-co">Bowen / Geraldine / Mark</div></div><span class="lead-status status-hot">Proposal in progress</span></div>
           <div class="lead-item"><div><div class="lead-name">Shubham Arora</div><div class="lead-co">Raffle World</div></div><span class="lead-status status-warm">Follow-up pending</span></div>
-          <div class="lead-item"><div><div class="lead-name">ATOM (Alex Lovallo)</div><div class="lead-co">ATOM</div></div><span class="lead-status status-warm">Scripts in review</span></div>
+          <div class="lead-item"><div><div class="lead-name">ATOM (Alex Lovallo)</div><div class="lead-co">ATOM</div></div><span class="lead-status status-warm">Compliance docs em andamento</span></div>
           <div class="lead-item"><div><div class="lead-name">Paul Pellizzari</div><div class="lead-co">Hard Rock Bet</div></div><span class="lead-status status-cold">No outreach yet</span></div>
+          <div class="lead-item"><div><div class="lead-name">BEC (guowei@bio-explorer)</div><div class="lead-co">BEC x Intentt</div></div><span class="lead-status status-hot">Call agendada Jun 11</span></div>
         </div>
       </div>
       <div class="card">
@@ -169,8 +228,9 @@
           <div class="lead-item"><div><div class="lead-name">BetterMeRx</div></div><span class="lead-status status-active">Active</span></div>
           <div class="lead-item"><div><div class="lead-name">NeoBet Ontario</div></div><span class="lead-status status-active">Active</span></div>
           <div class="lead-item"><div><div class="lead-name">Hanhoo TikTok Shop</div></div><span class="lead-status status-active">Active</span></div>
-          <div class="lead-item"><div><div class="lead-name">Total Security</div></div><span class="lead-status status-active">Active</span></div>
-          <div class="lead-item"><div><div class="lead-name">Blossom</div></div><span class="lead-status status-active">Active</span></div>
+          <div class="lead-item"><div><div class="lead-name">Total Security</div></div><span class="lead-status status-warm">Email forwarded compliance</span></div>
+          <div class="lead-item"><div><div class="lead-name">Blossom</div></div><span class="lead-status status-active">Weekly Recap Jun 12</span></div>
+          <div class="lead-item"><div><div class="lead-name">Aposta Premia / ApplyBoard</div></div><span class="lead-status status-active">Active</span></div>
         </div>
       </div>
     </div>
@@ -181,37 +241,54 @@ const STORAGE_KEY='mariana_dash_v1',WEEK_KEY='mariana_week_v1';
 function getWeekId(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));return m.toISOString().slice(0,10);}
 function getWeekLabel(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));const s=new Date(m);s.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('en-CA',{month:'short',day:'numeric'});return`Week of ${f(m)} – ${f(s)}`;}
 function getTodayIdx(){const d=new Date().getDay();return d===0?4:d-1;}
+// REAL CALENDAR DATA — Jun 9–13 2026 (America/Toronto)
+// Mon Jun 9: TL Weekly 9:00–9:45, General Weekly 10:00–10:30, Creative Weekly 11:30–12:00
+// Tue Jun 10: (today — no scheduled calls from calendar)
+// Wed Jun 11: Lucas Appointment 8:00–10:00, BEC x Intentt 11:00–11:30
+// Thu Jun 12: Weekly Recap (Blossom) 12:00–13:00
+// Fri Jun 13: —
 const DAYS=[
-  {name:'Monday',short:'MON',calls:[{time:'10:00am',text:'Agency Weekly Meeting',color:'#2D6BE4'}],tasks:[
+  {name:'Monday',short:'MON',calls:[
+    {time:'9:00am',text:'TL Weekly Meeting',color:'#6B3FA0'},
+    {time:'10:00am',text:'General Weekly Meeting',color:'#2D6BE4'},
+    {time:'11:30am',text:'Creative Weekly Meeting',color:'#0D7377'},
+  ],tasks:[
     {id:'mon1',label:'Agency weekly report ready before 10am',tags:['internal']},
     {id:'mon2',label:'Present report — flag blockers to Mike',tags:['internal']},
     {id:'mon3',label:'Receive pipeline status from Laís',tags:['miles']},
     {id:'mon4',label:'Receive weekly summary from Maia',tags:['miles']},
     {id:'mon5',label:'Check Audrey pending approvals — follow up if >48h',tags:['miles']},
   ]},
-  {name:'Tuesday',short:'TUE',calls:[{time:'9:00am',text:'Team Leads Weekly',color:'#6B3FA0'},{time:'10:00am',text:'General Weekly',color:'#0D7377'}],tasks:[
+  {name:'Tuesday',short:'TUE',calls:[],tasks:[
     {id:'tue1',label:'Team Leads — review blockers, decisions needed',tags:['internal']},
     {id:'tue2',label:'General Weekly — present week priorities',tags:['internal']},
     {id:'tue3',label:'Check active leads — any follow-up due this week?',tags:['leads']},
-    {id:'tue4',label:'Check affiliate activity if anything flagged',tags:['internal']},
+    {id:'tue4',label:'Payroll: aguardar Mike confirmar revisão de comissões',tags:['finance']},
+    {id:'tue5',label:'Harry: invoices de Maio ausentes no Retool — checar amanhã',tags:['totalsec']},
   ]},
-  {name:'Wednesday',short:'WED',calls:[],tasks:[
+  {name:'Wednesday',short:'WED',calls:[
+    {time:'8:00am',text:'Lucas Appointment',color:'#9B9891'},
+    {time:'11:00am',text:'BEC x Intentt',color:'#C0392B'},
+  ],tasks:[
     {id:'wed1',label:'Mid-week client check — any campaign issues from Maia?',tags:['internal']},
     {id:'wed2',label:'Check Audrey approvals — follow up if >48h',tags:['miles']},
     {id:'wed3',label:'BetterMeRx — production status check',tags:['bettermerx']},
     {id:'wed4',label:'NeoBet — anything pending compliance with Alexanjelo?',tags:['neobet']},
+    {id:'wed5',label:'Responder Alexanjelo: lista de clientes affiliate vs agency',tags:['internal']},
   ]},
-  {name:'Thursday',short:'THU',calls:[],tasks:[
+  {name:'Thursday',short:'THU',calls:[
+    {time:'12:00pm',text:'Weekly Recap (Blossom)',color:'#6B3FA0'},
+  ],tasks:[
     {id:'thu1',label:'Review Laís QA on creator assets',tags:['miles']},
-    {id:'thu2',label:'Total Security Retool dashboard — any anomalies?',tags:['totalsec']},
+    {id:'thu2',label:'Total Security Retool dashboard — invoices maio ausentes (Harry)',tags:['totalsec']},
     {id:'thu3',label:'Hanhoo — check performance with Tracy',tags:['hanhoo']},
-    {id:'thu4',label:'Prep Blossom report data for Friday call',tags:['blossom']},
+    {id:'thu4',label:'Prep Blossom report data for Weekly Recap',tags:['blossom']},
   ]},
-  {name:'Friday',short:'FRI',calls:[{time:'12:00pm',text:'Blossom Weekly Recap',color:'#6B3FA0'}],tasks:[
+  {name:'Friday',short:'FRI',calls:[],tasks:[
     {id:'fri1',label:'Blossom report ready before 12pm',tags:['blossom']},
     {id:'fri2',label:'Present Blossom report — document decisions',tags:['blossom']},
     {id:'fri3',label:'Week close — what advanced, what is blocked',tags:['internal']},
-    {id:'fri4',label:'Payroll check — any invoices or approvals pending?',tags:['finance']},
+    {id:'fri4',label:'Payroll check — invoices / approvals pending?',tags:['finance']},
     {id:'fri5',label:'Start agency weekly report draft for Monday',tags:['internal']},
   ]},
 ];
