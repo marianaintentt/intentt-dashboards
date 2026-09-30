@@ -161,15 +161,12 @@ const SECTIONS = [
     { id:"owners", type:"textarea", req:true, label:"Who owns what on your side?", help:"Name, email and usual response time for: day-to-day contact, creative approval, legal / compliance approval, and the final decision-maker." }
   ]},
   { id:"product", title:"Your product", why:"Great ads start from what the product promises and why the brand exists, not from a format.", qs:[
-    { id:"what_you_sell", type:"textarea", req:true, label:"What do you sell, and who is it for?" },
+    { id:"what_you_sell", type:"textarea", req:true, label:"What do you sell, who is it for, and what makes your priority products different?" },
     { id:"brand_story", type:"textarea", label:"Why does this brand exist?", help:"The founding story in a few lines." },
-    { id:"focus_product", type:"textarea", req:true, label:"Which products should we feature first, and what makes them different from the alternatives?" },
-    { id:"offers", type:"textarea", label:"Your current offers, and any offers that are off-limits", help:"Discounts, bundles, free gifts, subscriptions. E.g. \"never more than 20% off\"." },
-    { id:"whats_coming", type:"textarea", label:"Anything coming up or going on that we should know about?", help:"Launches, stock or shipping issues, price or packaging changes. We won't promise in ads what you can't deliver." }
+    { id:"offers", type:"textarea", label:"What offers, launches or operational details should we know about?", help:"Include discounts, bundles, offer limits, launches, stock or shipping issues, and price or packaging changes." }
   ]},
   { id:"customers", title:"Your customers", why:"We build personas from real evidence, then check whether your ads reach the right people.", qs:[
-    { id:"who_buys", type:"textarea", req:true, label:"Who buys from you today, and who are your best customers?", help:"Age, gender, location, language, life stage. Best = most profitable, buy again or spend more." },
-    { id:"want_to_reach", type:"textarea", label:"Who would you like to reach that you're not reaching yet?" },
+    { id:"who_buys", type:"textarea", req:true, label:"Who buys from you today, who are your best customers, and who would you like to reach next?", help:"Include age, location, language, life stage and what makes your best customers valuable." },
     { id:"real_life_use", type:"textarea", label:"How do customers use your product in real life?", help:"Routines, recipes, occasions. The unexpected uses are often the best ad ideas." },
     { id:"review_links", type:"textarea", req:true, label:"Where do customers leave honest reviews or ask questions about you?", help:"Links to Trustpilot, Amazon, Google, app stores, Reddit, Facebook groups. One per line." }
   ]},
@@ -178,24 +175,19 @@ const SECTIONS = [
     { id:"objections", type:"textarea", req:true, label:"What makes people hesitate before buying, and what do unhappy customers complain about?" }
   ]},
   { id:"brand", title:"Brand and competitors", why:"We stay inside your brand, and map what your customers already see in their feed so your ads stand out.", qs:[
-    { id:"pillars", type:"textarea", req:true, label:"The 3–5 messages you want to own, in order of priority", help:"These become the pillars for every batch. We won't add new ones without your OK." },
-    { id:"voice", type:"textarea", label:"How should the brand sound on social, and what should it never say or show?", help:"Tone, do's and don'ts for creators, words, claims or visuals that must never appear." },
+    { id:"pillars", type:"textarea", req:true, label:"What messages should the brand own, and how should it sound on social?", help:"List 3–5 priority messages plus tone, do's and don'ts, and anything we must never say or show." },
     { id:"competitors", type:"textarea", req:true, label:"Who do you lose customers to, and whose ads or UGC do you like?", help:"Names or links, and a word on why." }
   ]},
   { id:"ads", title:"Past ads and creators", why:"Your next winning ad often already exists in your account, in a different format.", qs:[
     { id:"best_worst_ads", type:"textarea", req:true, label:"Links to your 3 best ads and 3 that flopped, and why you think so" },
     { id:"formats_tried", type:"multi", label:"Which formats have you tried?", help:"Select all that apply.", options:["Static images","Carousels","UGC video","Founder video","Influencers","Partnership ads","Motion graphics","AI video","Catalog ads","None yet"] },
-    { id:"creators", type:"textarea", label:"Creators you've worked with, and which profiles fit your brand (and which don't)", help:"Handles, age, region, look, language, lifestyle, tone." },
-    { id:"partnership_ads", type:"single", label:"Are you open to partnership ads (ads that run under the creator's name)?", options:["Yes","No","Not sure"] },
-    { id:"on_camera", type:"single", label:"Would the founder or team members appear on camera?", options:["Founder","Team","Both","Not right now"] }
+    { id:"creators", type:"textarea", label:"Creators you've worked with, and which profiles fit your brand (and which don't)", help:"Handles, age, region, look, language, lifestyle, tone." }
   ]},
   { id:"goals", title:"Goals, markets and budget", why:"We agree on how we'll measure every test before we launch it.", qs:[
     { id:"goal_90", type:"textarea", req:true, label:"What should this achieve in the next 90 days, and what number tells us it worked?", help:"Your main KPI (ROAS, CPA, CPI, hook rate…), where it is today, and your target." },
-    { id:"markets", type:"text", req:true, label:"Which markets and languages will this content run in?", help:"Be specific, e.g. \"Canada – Ontario & Quebec, English and French\"." },
-    { id:"platforms", type:"multi", req:true, label:"Which platforms will it run on?", options:["Meta (Facebook & Instagram)","TikTok","Snapchat","YouTube","Pinterest","Organic only"] },
+    { id:"markets", type:"textarea", req:true, label:"Where will this content run?", help:"List markets, languages and platforms, e.g. Canada — Ontario & Quebec, English and French, on Meta and TikTok." },
     { id:"budget", type:"textarea", req:true, label:"Monthly ad spend per platform, and how much of it can go to testing new creative", help:"A range is fine." },
-    { id:"landing_cta", type:"textarea", label:"Landing page(s) and approved CTA wording", help:"E.g. \"Shop Now\", \"Download\", \"Play Now\"." },
-    { id:"key_dates", type:"textarea", label:"Key dates in the next 6 months", help:"Launches, sales, seasonal peaks, campaign deadlines." }
+    { id:"landing_cta", type:"textarea", label:"What landing pages, calls to action and key dates should we plan around?", help:"Include approved CTA wording plus launches, sales, seasonal peaks and deadlines." }
   ]},
   { id:"rules", title:"Compliance and rules", why:"We'd rather know the rules before we write than rewrite after. For regulated categories these are hard stops, not preferences.", qs:[
     { id:"category", type:"single", req:true, label:"Which category are you in?", options:["General consumer","Beauty","Apps & software",...REGULATED],
@@ -203,24 +195,16 @@ const SECTIONS = [
         { when:["iGaming or sports betting"], id:"igaming_licence", label:"Licensing, per market:", help:"Regulator, licence number(s) and legal minimum age. Please attach proof of licence in the files link." },
         { when:REGULATED, id:"regulator_rules", label:"Regulator and key rules:", help:"E.g. Health Canada, AGCO / iGaming Ontario, FTC. Link or attach your compliance guidelines." }
       ]},
-    { id:"disclaimers", type:"textarea", label:"Required disclaimers or legal lines, in exact wording", help:"Include any responsible-gambling, self-exclusion or helpline messaging if it applies." },
-    { id:"restrictions", type:"textarea", label:"Restrictions on testimonials, before/after, endorsements, gameplay or winnings, and any past ad rejections or account flags" },
-    { id:"age_rules", type:"text", label:"Age rules for your audience and for creators", help:"E.g. \"Audience 19+, creators 25+ and profiles pre-approved before filming\"." }
+    { id:"compliance_details", type:"textarea", label:"What compliance rules, disclaimers or past ad issues should we know about?", help:"Include exact legal lines, age rules, testimonial or before/after restrictions, and any past rejections or account flags." }
   ]},
   { id:"production", title:"UGC production", why:"So we cast the right creators, set them up properly and deliver exactly what you need.", show:hasUGC, qs:[
     { id:"formats_needed", type:"multi", req:true, label:"Which formats do you need?", options:["Vertical UGC (9:16, 15–45s)","Long-form UGC (16:9, 60–90s)","Static ads & carousels","AI-generated video"] },
-    { id:"volume", type:"text", req:true, label:"Videos per batch, and the turnaround you expect" },
-    { id:"usage", type:"single", req:true, label:"Usage rights you need", options:["Paid + organic, full buyout","Paid, limited period","Organic only","Not sure"] },
-    { id:"creator_style", type:"single", label:"Should creators show their face?", options:["Face on camera","Voiceover only","A mix"] },
-    { id:"exclusivity", type:"single", label:"Do creators need to be exclusive (no competing brands)?", options:["Yes","No","Not sure"] },
-    { id:"creator_access", type:"textarea", label:"What do creators need to film?", help:"Samples, app or demo login, store visit, screen recording. Who ships, from where, and how long it takes." },
     { id:"prod_specs", type:"textarea", label:"Production requirements", help:"Wardrobe, grooming or location rules, logo placement, intro/outro, music library, fonts, currency display, provider credits." }
   ]},
   { id:"access", title:"Access, files and working together", why:"Read-only access lets us rank your ads by real results instead of guessing from the outside.", qs:[
     { id:"access", type:"multi", label:"Which access can you give us?", help:"Select all that apply. Read-only is enough for research.", options:["Meta Ads Manager (read-only)","TikTok Ads Manager","Google Ads","Shopify","GA4","Can't give access, will send an export"] },
     { id:"files", type:"textarea", label:"Link to a shared folder with your files", help:"Google Drive, Dropbox or WeTransfer: brand guidelines and logos, product photos, top 10 video ads (original files), raw footage, review exports, Do's & Don'ts, any creative brief. Note which assets can be reused in paid ads." },
-    { id:"rhythm", type:"textarea", label:"Preferred weekly meeting day and time, and who should join the shared Slack channel" },
-    { id:"anything_else", type:"textarea", label:"Anything else we should know?" }
+    { id:"rhythm", type:"textarea", label:"How should we work together, and is there anything else we should know?", help:"Include your preferred meeting day and time, who should join Slack, and any other context." }
   ]}
 ];
 const CONFIRMS = [
@@ -231,7 +215,7 @@ const CONFIRMS = [
 ];
 
 /* ---------- STATE ---------- */
-const KEY = "intentt_onboarding_v2";
+const KEY = "intentt_onboarding_v3";
 let state = { step:0, data:{} };
 try { const s = JSON.parse(localStorage.getItem(KEY)||"null"); if (s && s.data) state = s; } catch(e){}
 const app = document.getElementById("app");
@@ -265,7 +249,7 @@ function renderWelcome(){
     <h1>Let's get to know your brand</h1>
     <p>Before we write a single script, we do the research: your customers, your market, your past ads and what's really stopping people from buying. This form gives us the starting point.</p>
     <p>Skip anything you don't know. "Not sure" is a useful answer too, and we'll dig into it together at kickoff.</p>
-    <div class="facts"><span class="fact">About 10–15 minutes</span><span class="fact">Short sections</span><span class="fact">Saves as you go</span><span class="fact">Confidential</span></div>
+    <div class="facts"><span class="fact">About 8–10 minutes</span><span class="fact">Short sections</span><span class="fact">Saves as you go</span><span class="fact">Confidential</span></div>
   </section>
   <div class="steps-preview">
     ${SECTIONS.map((s,i)=>`<div><b>${String(i+1).padStart(2,"0")}</b>${esc(s.title)}${s.show?' <span style="color:var(--muted);font-size:12px">(if UGC)</span>':""}</div>`).join("")}
