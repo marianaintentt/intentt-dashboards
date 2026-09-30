@@ -408,17 +408,10 @@ function renderDone(){
   <div class="done">
   <section class="hero">
     <div class="eyebrow">Sent</div>
-    <h1>Thank you. This is exactly what we need.</h1>
-    <p>Here's what happens next.</p>
+    <h1>Thank you.</h1>
+    <p>We'll get back to you if any additional information is needed.</p>
   </section>
-  <ol class="next-steps">
-    <li>We review your answers and send any follow-up questions within <b>2 business days</b>.</li>
-    <li>At kickoff, we go through anything marked "not sure" together.</li>
-    <li>We start the research: your customers, your market and your past ads. You'll receive the first reports in <b>about two weeks</b>.</li>
-  </ol>
-  <p class="help">Questions in the meantime? Reach us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. · <a href="#" id="dl2">Download a copy of your answers</a></p>
   </div>`;
-  $("dl2").onclick = ev=>{ev.preventDefault(); downloadCopy();};
   try{ localStorage.removeItem(KEY); }catch(e){}
   window.scrollTo(0,0);
 }
