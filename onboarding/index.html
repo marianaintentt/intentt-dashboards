@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intentt — Client Onboarding</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ====== CONFIG: paste your Google Apps Script web app URL below (see SETUP.md) ====== */
+</style>
+<script>
+  const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzy0LmA-kairGnw9CiemOvtTsbuFMLn4W9Ei6hgAf0ooJ5kz_FSJIc6BV1ztGZqZb5F/exec";
+  const CONTACT_EMAIL = "mariana@intentt.com";
+</script>
+<style>
+:root{
+  --ink:#0b0b0a; --ink-2:#3d3d39; --muted:#7a7a73; --paper:#f6f5f1; --card:#ffffff;
+  --line:#e3e1da; --yellow:#F5C518; --yellow-soft:#fff6d1; --err:#c0392b; --ok:#1d7a4f;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Archivo,Inter,sans-serif;margin:0;letter-spacing:-.02em}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:10;background:var(--ink);color:#fff}
+.bar-in{max-width:880px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px}
+.logo{font-family:Archivo,sans-serif;font-weight:900;font-size:22px;letter-spacing:-.04em;color:#fff;text-decoration:none}
+.logo span{color:var(--yellow)}
+.step-label{margin-left:auto;font-size:13px;color:#bdbdb5;white-space:nowrap}
+.progress{height:4px;background:#2a2a27}
+.progress i{display:block;height:100%;width:0;background:var(--yellow);transition:width .35s ease}
+
+.wrap{max-width:880px;margin:0 auto;padding:40px 20px 120px}
+
+/* welcome */
+.hero{background:var(--ink);color:#fff;border-radius:var(--radius);padding:44px 40px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--yellow);opacity:.95}
+.hero .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);font-weight:600}
+.hero h1{font-size:clamp(34px,6vw,54px);font-weight:900;line-height:1.02;margin:14px 0 18px;max-width:560px;position:relative;z-index:1}
+.hero p{color:#d6d6cf;max-width:560px;margin:0 0 12px;position:relative;z-index:1}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 28px;position:relative;z-index:1}
+.fact{border:1px solid #3a3a36;border-radius:999px;padding:6px 14px;font-size:13px;color:#e8e8e2}
+.steps-preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:22px}
+.steps-preview div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px}
+.steps-preview b{display:block;font-family:Archivo,sans-serif;font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:2px}
+
+/* section */
+.sec-head{margin-bottom:22px}
+.sec-num{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sec-num i{width:26px;height:26px;border-radius:8px;background:var(--yellow);color:var(--ink);display:inline-grid;place-items:center;font-style:normal;font-family:Archivo,sans-serif;font-weight:900;font-size:13px;letter-spacing:0}
+.sec-head h2{font-size:clamp(28px,4.4vw,40px);font-weight:900;margin:10px 0 8px}
+.why{background:var(--yellow-soft);border-left:4px solid var(--yellow);border-radius:0 10px 10px 0;padding:10px 14px;font-size:14px;color:var(--ink-2);max-width:640px}
+
+.q{scroll-margin-top:96px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px 20px;margin:14px 0}
+.q.invalid{border-color:var(--err);box-shadow:0 0 0 3px rgba(192,57,43,.08)}
+.q label.title,.q .title{display:block;font-weight:600;font-size:16.5px;margin-bottom:4px}
+.q .n{color:var(--muted);font-weight:500;margin-right:6px;font-variant-numeric:tabular-nums}
+.req{color:var(--err);margin-left:3px}
+.help{font-size:14px;color:var(--muted);margin:0 0 12px}
+.err-msg{display:none;color:var(--err);font-size:13px;margin-top:8px}
+.q.invalid .err-msg{display:block}
+input[type=text],input[type=email],input[type=url],textarea{width:100%;font:inherit;color:var(--ink);background:#fcfcfa;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;transition:border-color .15s, box-shadow .15s}
+textarea{min-height:104px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(245,197,24,.35);background:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sub label{display:block;font-size:13px;color:var(--ink-2);font-weight:500;margin:0 0 5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:inline-block;border:1.5px solid var(--line);border-radius:999px;padding:8px 15px;font-size:14.5px;background:#fcfcfa;transition:all .15s;user-select:none}
+.chip input:checked + span{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip input:focus-visible + span{box-shadow:0 0 0 3px rgba(245,197,24,.6)}
+.chip span:hover{border-color:var(--ink)}
+.other{margin-top:10px;display:none}
+.other.show{display:block}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(246,245,241,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:9}
+.nav-in{max-width:880px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:12px}
+.btn{border:0;border-radius:12px;padding:13px 22px;font-weight:600;font-size:15.5px}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#262623}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
+.btn-yellow:hover{filter:brightness(.96)}
+.btn-ghost{background:transparent;color:var(--ink-2);padding-left:6px;padding-right:6px}
+.btn:disabled{opacity:.5;cursor:default}
+.saved{font-size:13px;color:var(--muted);margin-right:auto}
+.spacer{flex:1}
+
+/* review & done */
+.review-sec{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
+.review-sec h3{font-size:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.review-sec h3 button{font:inherit;font-size:13px;font-weight:600;background:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+.review-row{padding:10px 0;border-top:1px solid var(--line);font-size:14.5px}
+.review-row:first-of-type{border-top:0}
+.review-row b{display:block;font-weight:600;color:var(--ink-2);font-size:13.5px}
+.review-row .empty{color:var(--muted);font-style:italic}
+.done{text-align:left}
+.done .hero:after{background:var(--yellow)}
+.next-steps{counter-reset:s;list-style:none;padding:0;margin:24px 0}
+.next-steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px 16px 58px;position:relative;margin:10px 0}
+.next-steps li:before{content:counter(s);position:absolute;left:16px;top:14px;width:28px;height:28px;border-radius:8px;background:var(--yellow);display:grid;place-items:center;font-family:Archivo,sans-serif;font-weight:900}
+.notice{font-size:14px;border-radius:10px;padding:12px 14px;margin:14px 0}
+.notice.err{background:#fdeceb;color:#7a1f16}
+.hidden{display:none!important}
+.foot{max-width:880px;margin:0 auto;padding:0 20px 110px;font-size:12.5px;color:var(--muted)}
+
+@media (max-width:640px){
+  .wrap{padding:24px 16px 120px}
+  .hero{padding:32px 22px}
+  .hero:after{width:140px;height:140px;right:-50px;top:-50px}
+  .q{padding:18px 16px}
+  .grid2{grid-template-columns:1fr}
+  .nav-in{padding:12px 16px}
+  .btn{padding:12px 16px}
+  .saved{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="logo" href="#" aria-label="intentt">intentt<span>.</span></a>
+    <span class="step-label" id="stepLabel">Client onboarding</span>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <span class="saved" id="saved"></span>
+    <button class="btn btn-ghost" id="back" type="button">← Back</button>
+    <button class="btn btn-primary" id="next" type="button">Start →</button>
+  </div>
+</nav>
+
+<script>
+/* ---------- FORM CONTENT ---------- */
+const hasUGC = d => (d.services||[]).includes("UGC video production");
+const REGULATED = ["Health & supplements","Finance","Alcohol or cannabis","iGaming or sports betting","Other regulated"];
+const SECTIONS = [
+  { id:"about", title:"About you and your team", why:null, qs:[
+    { id:"company", type:"group", label:"Company and your details", req:true, fields:[
+      {id:"company_name", label:"Company name", type:"text", req:true},
+      {id:"website", label:"Website", type:"url", req:true, ph:"https://"},
+      {id:"contact_name", label:"Your name", type:"text", req:true},
+      {id:"contact_role", label:"Your role", type:"text", req:true},
+      {id:"contact_email", label:"Email", type:"email", req:true}
+    ]},
+    { id:"services", type:"multi", req:true, label:"What are we starting with?", help:"Select all that apply.", options:["Creative strategy","UGC video production","Paid media","TikTok Shop"] },
+    { id:"owners", type:"textarea", req:true, label:"Who owns what on your side?", help:"Name, email and usual response time for: day-to-day contact, creative approval, legal / compliance approval, and the final decision-maker." }
+  ]},
+  { id:"product", title:"Your product", why:"Great ads start from what the product promises and why the brand exists, not from a format.", qs:[
+    { id:"what_you_sell", type:"textarea", req:true, label:"What do you sell, and who is it for?" },
+    { id:"brand_story", type:"textarea", label:"Why does this brand exist?", help:"The founding story in a few lines." },
+    { id:"focus_product", type:"textarea", req:true, label:"Which products should we feature first, and what makes them different from the alternatives?" },
+    { id:"offers", type:"textarea", label:"Your current offers, and any offers that are off-limits", help:"Discounts, bundles, free gifts, subscriptions. E.g. \"never more than 20% off\"." },
+    { id:"whats_coming", type:"textarea", label:"Anything coming up or going on that we should know about?", help:"Launches, stock or shipping issues, price or packaging changes. We won't promise in ads what you can't deliver." }
+  ]},
+  { id:"customers", title:"Your customers", why:"We build personas from real evidence, then check whether your ads reach the right people.", qs:[
+    { id:"who_buys", type:"textarea", req:true, label:"Who buys from you today, and who are your best customers?", help:"Age, gender, location, language, life stage. Best = most profitable, buy again or spend more." },
+    { id:"want_to_reach", type:"textarea", label:"Who would you like to reach that you're not reaching yet?" },
+    { id:"real_life_use", type:"textarea", label:"How do customers use your product in real life?", help:"Routines, recipes, occasions. The unexpected uses are often the best ad ideas." },
+    { id:"review_links", type:"textarea", req:true, label:"Where do customers leave honest reviews or ask questions about you?", help:"Links to Trustpilot, Amazon, Google, app stores, Reddit, Facebook groups. One per line." }
+  ]},
+  { id:"proof", title:"Proof and objections", why:"People buy when their doubts are answered. The honest version helps us more than the polished one.", qs:[
+    { id:"proof", type:"textarea", req:true, label:"What proof do you have that the product works?", help:"Numbers, testing, certifications, awards, years in market, guarantees, press." },
+    { id:"objections", type:"textarea", req:true, label:"What makes people hesitate before buying, and what do unhappy customers complain about?" }
+  ]},
+  { id:"brand", title:"Brand and competitors", why:"We stay inside your brand, and map what your customers already see in their feed so your ads stand out.", qs:[
+    { id:"pillars", type:"textarea", req:true, label:"The 3–5 messages you want to own, in order of priority", help:"These become the pillars for every batch. We won't add new ones without your OK." },
+    { id:"voice", type:"textarea", label:"How should the brand sound on social, and what should it never say or show?", help:"Tone, do's and don'ts for creators, words, claims or visuals that must never appear." },
+    { id:"competitors", type:"textarea", req:true, label:"Who do you lose customers to, and whose ads or UGC do you like?", help:"Names or links, and a word on why." }
+  ]},
+  { id:"ads", title:"Past ads and creators", why:"Your next winning ad often already exists in your account, in a different format.", qs:[
+    { id:"best_worst_ads", type:"textarea", req:true, label:"Links to your 3 best ads and 3 that flopped, and why you think so" },
+    { id:"formats_tried", type:"multi", label:"Which formats have you tried?", help:"Select all that apply.", options:["Static images","Carousels","UGC video","Founder video","Influencers","Partnership ads","Motion graphics","AI video","Catalog ads","None yet"] },
+    { id:"creators", type:"textarea", label:"Creators you've worked with, and which profiles fit your brand (and which don't)", help:"Handles, age, region, look, language, lifestyle, tone." },
+    { id:"partnership_ads", type:"single", label:"Are you open to partnership ads (ads that run under the creator's name)?", options:["Yes","No","Not sure"] },
+    { id:"on_camera", type:"single", label:"Would the founder or team members appear on camera?", options:["Founder","Team","Both","Not right now"] }
+  ]},
+  { id:"goals", title:"Goals, markets and budget", why:"We agree on how we'll measure every test before we launch it.", qs:[
+    { id:"goal_90", type:"textarea", req:true, label:"What should this achieve in the next 90 days, and what number tells us it worked?", help:"Your main KPI (ROAS, CPA, CPI, hook rate…), where it is today, and your target." },
+    { id:"markets", type:"text", req:true, label:"Which markets and languages will this content run in?", help:"Be specific, e.g. \"Canada – Ontario & Quebec, English and French\"." },
+    { id:"platforms", type:"multi", req:true, label:"Which platforms will it run on?", options:["Meta (Facebook & Instagram)","TikTok","Snapchat","YouTube","Pinterest","Organic only"] },
+    { id:"budget", type:"textarea", req:true, label:"Monthly ad spend per platform, and how much of it can go to testing new creative", help:"A range is fine." },
+    { id:"landing_cta", type:"textarea", label:"Landing page(s) and approved CTA wording", help:"E.g. \"Shop Now\", \"Download\", \"Play Now\"." },
+    { id:"key_dates", type:"textarea", label:"Key dates in the next 6 months", help:"Launches, sales, seasonal peaks, campaign deadlines." }
+  ]},
+  { id:"rules", title:"Compliance and rules", why:"We'd rather know the rules before we write than rewrite after. For regulated categories these are hard stops, not preferences.", qs:[
+    { id:"category", type:"single", req:true, label:"Which category are you in?", options:["General consumer","Beauty","Apps & software",...REGULATED],
+      follows:[
+        { when:["iGaming or sports betting"], id:"igaming_licence", label:"Licensing, per market:", help:"Regulator, licence number(s) and legal minimum age. Please attach proof of licence in the files link." },
+        { when:REGULATED, id:"regulator_rules", label:"Regulator and key rules:", help:"E.g. Health Canada, AGCO / iGaming Ontario, FTC. Link or attach your compliance guidelines." }
+      ]},
+    { id:"disclaimers", type:"textarea", label:"Required disclaimers or legal lines, in exact wording", help:"Include any responsible-gambling, self-exclusion or helpline messaging if it applies." },
+    { id:"restrictions", type:"textarea", label:"Restrictions on testimonials, before/after, endorsements, gameplay or winnings, and any past ad rejections or account flags" },
+    { id:"age_rules", type:"text", label:"Age rules for your audience and for creators", help:"E.g. \"Audience 19+, creators 25+ and profiles pre-approved before filming\"." }
+  ]},
+  { id:"production", title:"UGC production", why:"So we cast the right creators, set them up properly and deliver exactly what you need.", show:hasUGC, qs:[
+    { id:"formats_needed", type:"multi", req:true, label:"Which formats do you need?", options:["Vertical UGC (9:16, 15–45s)","Long-form UGC (16:9, 60–90s)","Static ads & carousels","AI-generated video"] },
+    { id:"volume", type:"text", req:true, label:"Videos per batch, and the turnaround you expect" },
+    { id:"usage", type:"single", req:true, label:"Usage rights you need", options:["Paid + organic, full buyout","Paid, limited period","Organic only","Not sure"] },
+    { id:"creator_style", type:"single", label:"Should creators show their face?", options:["Face on camera","Voiceover only","A mix"] },
+    { id:"exclusivity", type:"single", label:"Do creators need to be exclusive (no competing brands)?", options:["Yes","No","Not sure"] },
+    { id:"creator_access", type:"textarea", label:"What do creators need to film?", help:"Samples, app or demo login, store visit, screen recording. Who ships, from where, and how long it takes." },
+    { id:"prod_specs", type:"textarea", label:"Production requirements", help:"Wardrobe, grooming or location rules, logo placement, intro/outro, music library, fonts, currency display, provider credits." }
+  ]},
+  { id:"access", title:"Access, files and working together", why:"Read-only access lets us rank your ads by real results instead of guessing from the outside.", qs:[
+    { id:"access", type:"multi", label:"Which access can you give us?", help:"Select all that apply. Read-only is enough for research.", options:["Meta Ads Manager (read-only)","TikTok Ads Manager","Google Ads","Shopify","GA4","Can't give access, will send an export"] },
+    { id:"files", type:"textarea", label:"Link to a shared folder with your files", help:"Google Drive, Dropbox or WeTransfer: brand guidelines and logos, product photos, top 10 video ads (original files), raw footage, review exports, Do's & Don'ts, any creative brief. Note which assets can be reused in paid ads." },
+    { id:"rhythm", type:"textarea", label:"Preferred weekly meeting day and time, and who should join the shared Slack channel" },
+    { id:"anything_else", type:"textarea", label:"Anything else we should know?" }
+  ]}
+];
+const CONFIRMS = [
+  "All claims we make in scripts will be accurate and can be substantiated by us.",
+  "Our team will review and approve all scripts and final videos before they are published or run as paid media.",
+  "Final compliance and publishing decisions rest with us, not Intentt.",
+  "We'll tell Intentt about any change to claims, offers or legal requirements that affects approved creative."
+];
+
+/* ---------- STATE ---------- */
+const KEY = "intentt_onboarding_v2";
+let state = { step:0, data:{} };
+try { const s = JSON.parse(localStorage.getItem(KEY)||"null"); if (s && s.data) state = s; } catch(e){}
+const app = document.getElementById("app");
+const $ = id => document.getElementById(id);
+const visible = () => SECTIONS.filter(s=>!s.show || s.show(state.data));
+const total = () => visible().length; // steps: 0 welcome, 1..N sections, N+1 review, N+2 done
+function numbers(){ let n=0; const m={}; visible().forEach(s=>s.qs.forEach(q=>{ m[q.id]=++n; })); return m; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); $("saved").textContent = "Saved on this device"; }catch(e){} }
+function esc(s){ return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function followsFor(q){ return (q.follows||[]).filter(f=>f.when.includes(state.data[q.id])); }
+
+/* ---------- RENDER ---------- */
+function render(){
+  const st = state.step, N = total();
+  $("progress").style.width = (st===0?0: Math.min(100, (st/(N+1))*100)) + "%";
+  $("back").classList.toggle("hidden", st===0 || st===N+2);
+  $("nav").classList.toggle("hidden", st===N+2);
+  if (st===0) return renderWelcome();
+  if (st<=N) return renderSection(visible()[st-1], st);
+  if (st===N+1) return renderReview();
+  return renderDone();
+}
+
+function renderWelcome(){
+  $("stepLabel").textContent = "Client onboarding";
+  $("next").textContent = Object.keys(state.data).length ? "Continue →" : "Start →";
+  $("next").className = "btn btn-yellow";
+  app.innerHTML = `
+  <section class="hero">
+    <div class="eyebrow">Client onboarding</div>
+    <h1>Let's get to know your brand</h1>
+    <p>Before we write a single script, we do the research: your customers, your market, your past ads and what's really stopping people from buying. This form gives us the starting point.</p>
+    <p>Skip anything you don't know. "Not sure" is a useful answer too, and we'll dig into it together at kickoff.</p>
+    <div class="facts"><span class="fact">About 10–15 minutes</span><span class="fact">Short sections</span><span class="fact">Saves as you go</span><span class="fact">Confidential</span></div>
+  </section>
+  <div class="steps-preview">
+    ${SECTIONS.map((s,i)=>`<div><b>${String(i+1).padStart(2,"0")}</b>${esc(s.title)}${s.show?' <span style="color:var(--muted);font-size:12px">(if UGC)</span>':""}</div>`).join("")}
+  </div>`;
+  window.scrollTo(0,0);
+}
+
+function fieldHTML(q){
+  const v = state.data[q.id];
+  if (q.type==="textarea") return `<textarea id="f_${q.id}" data-id="${q.id}">${esc(v)}</textarea>`;
+  if (q.type==="text") return `<input type="text" id="f_${q.id}" data-id="${q.id}" value="${esc(v)}">`;
+  if (q.type==="group") return `<div class="grid2">${q.fields.map(f=>`
+      <div class="sub"><label for="f_${f.id}">${esc(f.label)}${f.req?'<span class="req">*</span>':""}</label>
+      <input type="${f.type==="url"?"url":f.type==="email"?"email":"text"}" id="f_${f.id}" data-id="${f.id}" value="${esc(state.data[f.id])}" placeholder="${esc(f.ph||"")}" autocomplete="${f.type==="email"?"email":f.id==="contact_name"?"name":f.id==="company_name"?"organization":"off"}"></div>`).join("")}</div>`;
+  if (q.type==="single"||q.type==="multi"){
+    const t = q.type==="single"?"radio":"checkbox";
+    const cur = q.type==="multi" ? (v||[]) : v;
+    let h = `<div class="chips" role="${q.type==="single"?"radiogroup":"group"}" aria-label="${esc(q.label)}">` + q.options.map(o=>`
+      <label class="chip"><input type="${t}" name="f_${q.id}" data-id="${q.id}" value="${esc(o)}" ${(q.type==="multi"?cur.includes(o):cur===o)?"checked":""}><span>${esc(o)}</span></label>`).join("") + `</div>`;
+    (q.follows||[]).forEach(f=>{
+      const show = f.when.includes(v);
+      h += `<div class="other ${show?"show":""}" id="follow_${f.id}"><p class="help" style="margin:12px 0 8px"><b style="color:var(--ink)">${esc(f.label)}</b> ${esc(f.help||"")}</p>
+        <textarea id="f_${f.id}" data-id="${f.id}">${esc(state.data[f.id])}</textarea></div>`;
+    });
+    return h;
+  }
+}
+
+function renderSection(sec, st){
+  const N = total(), nums = numbers();
+  $("stepLabel").textContent = `Section ${st} of ${N}`;
+  $("next").textContent = st===N ? "Review answers →" : "Next →";
+  $("next").className = "btn btn-primary";
+  app.innerHTML = `
+  <div class="sec-head">
+    <span class="sec-num"><i>${st}</i> Section ${st} of ${N}</span>
+    <h2>${esc(sec.title)}</h2>
+    ${sec.why?`<div class="why"><b>Why we ask:</b> ${esc(sec.why)}</div>`:""}
+  </div>
+  ${sec.qs.map(q=>{ const lab = (q.type==="textarea"||q.type==="text"); return `
+    <div class="q" id="q_${q.id}">
+      <${lab?`label for="f_${q.id}"`:"div"} class="title"><span class="n">${nums[q.id]}.</span>${esc(q.label)}${q.req?'<span class="req" aria-label="required">*</span>':""}</${lab?"label":"div"}>
+      ${q.help?`<p class="help">${esc(q.help)}</p>`:`<div style="height:8px"></div>`}
+      ${fieldHTML(q)}
+      <div class="err-msg">Please answer this one. A short answer or "not sure" is fine.</div>
+    </div>`;}).join("")}
+  <p class="help" style="margin-top:18px"><span class="req">*</span> Required</p>`;
+  bindInputs(sec);
+  window.scrollTo(0,0);
+}
+
+function bindInputs(sec){
+  app.querySelectorAll("input[type=text],input[type=email],input[type=url],textarea").forEach(el=>{
+    el.addEventListener("input", ()=>{ state.data[el.dataset.id]=el.value; save(); el.closest(".q")?.classList.remove("invalid"); });
+  });
+  app.querySelectorAll("input[type=radio]").forEach(el=>{
+    el.addEventListener("change", ()=>{ const id=el.dataset.id; state.data[id]=el.value; save();
+      el.closest(".q").classList.remove("invalid");
+      const q = sec.qs.find(x=>x.id===id); (q&&q.follows||[]).forEach(f=>$("follow_"+f.id).classList.toggle("show", f.when.includes(el.value)));
+    });
+  });
+  app.querySelectorAll("input[type=checkbox]").forEach(el=>{
+    el.addEventListener("change", ()=>{ const id=el.dataset.id;
+      state.data[id] = [...app.querySelectorAll(`input[name="f_${id}"]:checked`)].map(x=>x.value); save();
+      el.closest(".q").classList.remove("invalid"); });
+  });
+}
+
+function isFilled(v){ return Array.isArray(v) ? v.length>0 : String(v??"").trim().length>0; }
+function validate(sec){
+  let firstBad = null;
+  sec.qs.forEach(q=>{
+    let ok = true;
+    if (q.type==="group") ok = q.fields.every(f=>!f.req || isFilled(state.data[f.id]));
+    else if (q.req) ok = isFilled(state.data[q.id]);
+    if (q.type==="group"){ const em = state.data.contact_email||""; if (em && !/^\S+@\S+\.\S+$/.test(em)) ok=false; }
+    const box = $("q_"+q.id); box.classList.toggle("invalid", !ok);
+    if (!ok && !firstBad) firstBad = box;
+  });
+  if (firstBad){ firstBad.scrollIntoView({behavior:"smooth", block:"center"}); const f=firstBad.querySelector("input,textarea"); f&&f.focus({preventScroll:true}); return false; }
+  return true;
+}
+
+function answerText(q){
+  if (q.type==="group") return q.fields.map(f=>`${f.label}: ${state.data[f.id]||"—"}`).join("\n");
+  let v = state.data[q.id]; v = Array.isArray(v)? v.join(", ") : (v||"");
+  followsFor(q).forEach(f=>{ if (state.data[f.id]) v += `\n${f.label} ${state.data[f.id]}`; });
+  return v;
+}
+
+function renderReview(){
+  const nums = numbers();
+  $("stepLabel").textContent = "Review";
+  $("next").textContent = "Send to Intentt →";
+  $("next").className = "btn btn-yellow";
+  const conf = state.data._confirms||[];
+  app.innerHTML = `
+  <div class="sec-head">
+    <span class="sec-num"><i>✓</i> Almost done</span>
+    <h2>Check your answers</h2>
+    <div class="why">Everything look right? You can jump back to any section to edit.</div>
+  </div>
+  <div id="sendErr"></div>
+  ${visible().map((s,i)=>`
+    <div class="review-sec"><h3><span>${i+1}. ${esc(s.title)}</span><button type="button" data-go="${i+1}">Edit</button></h3>
+    ${s.qs.map(q=>{ const a=answerText(q); return `<div class="review-row"><b>${nums[q.id]}. ${esc(q.label)}</b>${a.trim()?esc(a).replace(/\n/g,"<br>"):'<span class="empty">Skipped</span>'}</div>`; }).join("")}
+    </div>`).join("")}
+  <div class="q" id="q_confirms" style="margin-top:22px">
+    <div class="title">Before we start, please confirm<span class="req">*</span></div>
+    <p class="help">Standard for every Intentt engagement.</p>
+    ${CONFIRMS.map((c,i)=>`<label style="display:flex;gap:10px;align-items:flex-start;margin:10px 0;cursor:pointer"><input type="checkbox" data-confirm="${i}" ${conf.includes(i)?"checked":""} style="width:18px;height:18px;margin-top:3px;accent-color:#0b0b0a"><span>${esc(c)}</span></label>`).join("")}
+    <div class="err-msg">Please confirm all four to send the form.</div>
+  </div>`;
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ state.step=+b.dataset.go; save(); render(); });
+  app.querySelectorAll("[data-confirm]").forEach(cb=>cb.onchange=()=>{
+    state.data._confirms=[...app.querySelectorAll("[data-confirm]:checked")].map(x=>+x.dataset.confirm); save(); $("q_confirms").classList.remove("invalid"); });
+  window.scrollTo(0,0);
+}
+
+function payload(){
+  const answers = [], nums = numbers();
+  visible().forEach((s,i)=>s.qs.forEach(q=>answers.push({section:`${i+1}. ${s.title}`, n:nums[q.id], question:q.label, answer:answerText(q)})));
+  const conf = state.data._confirms||[];
+  CONFIRMS.forEach((c,i)=>answers.push({section:"Confirmations", n:"✓", question:c, answer: conf.includes(i)?"Confirmed":"Not confirmed"}));
+  return { submitted_at:new Date().toISOString(), company:state.data.company_name||"", contact:state.data.contact_name||"", email:state.data.contact_email||"", website:state.data.website||"", services:(state.data.services||[]).join(", "), answers };
+}
+
+function downloadCopy(){
+  const p = payload();
+  const txt = `Intentt onboarding — ${p.company}\nSubmitted ${new Date(p.submitted_at).toLocaleString()}\n\n` +
+    p.answers.map(a=>`${a.n}. ${a.question}\n${a.answer||"(skipped)"}\n`).join("\n");
+  const blob = new Blob([txt],{type:"text/plain"}); const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=`intentt-onboarding-${(p.company||"answers").replace(/\W+/g,"-").toLowerCase()}.txt`; a.click();
+}
+
+async function submit(){
+  if ((state.data._confirms||[]).length < CONFIRMS.length){ const b=$("q_confirms"); b.classList.add("invalid"); b.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  const btn = $("next"); btn.disabled = true; btn.textContent = "Sending…";
+  try{
+    if (!SUBMIT_URL || SUBMIT_URL.startsWith("PASTE_")) throw new Error("not configured");
+    // text/plain avoids a CORS preflight; Apps Script reads e.postData.contents
+    await fetch(SUBMIT_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(payload()) });
+    state.step = total()+2; save(); render();
+  }catch(e){
+    btn.disabled = false; btn.textContent = "Try again →";
+    $("sendErr").innerHTML = `<div class="notice err">We couldn't send your answers just now. Your answers are saved on this device. Please try again, or <a href="#" id="dl">download a copy</a> and email it to <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</div>`;
+    $("dl").onclick = ev=>{ev.preventDefault(); downloadCopy();};
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+}
+
+function renderDone(){
+  $("stepLabel").textContent = "Sent";
+  $("progress").style.width = "100%";
+  app.innerHTML = `
+  <div class="done">
+  <section class="hero">
+    <div class="eyebrow">Sent</div>
+    <h1>Thank you. This is exactly what we need.</h1>
+    <p>Here's what happens next.</p>
+  </section>
+  <ol class="next-steps">
+    <li>We review your answers and send any follow-up questions within <b>2 business days</b>.</li>
+    <li>At kickoff, we go through anything marked "not sure" together.</li>
+    <li>We start the research: your customers, your market and your past ads. You'll receive the first reports in <b>about two weeks</b>.</li>
+  </ol>
+  <p class="help">Questions in the meantime? Reach us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. · <a href="#" id="dl2">Download a copy of your answers</a></p>
+  </div>`;
+  $("dl2").onclick = ev=>{ev.preventDefault(); downloadCopy();};
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  window.scrollTo(0,0);
+}
+
+/* ---------- NAV ---------- */
+$("next").onclick = ()=>{
+  const st = state.step, N = total();
+  if (st>=1 && st<=N && !validate(visible()[st-1])) return;
+  if (st===N+1) return submit();
+  state.step = st+1; save(); render();
+};
+$("back").onclick = ()=>{ if(state.step>0){ state.step--; save(); render(); } };
+if (state.step>total()+1) state.step = 0;
+render();
+</script>
+</body>
+</html>
